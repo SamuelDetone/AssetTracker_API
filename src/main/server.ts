@@ -1,0 +1,1 @@
+console.log('PokéManager API iniciada');
