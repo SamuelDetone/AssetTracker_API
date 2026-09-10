@@ -105,11 +105,16 @@ export class InMemoryAssetRepository implements IAssetRepository {
   }
 
   async delete(ticker: string): Promise<boolean> {
-    const currentLength = this.assets.length;
+    const assetToDelete = await this.findByTicker(ticker);
+
+    if (!assetToDelete) {
+      return false;
+    }
+
     this.assets = this.assets.filter(
       (asset) => asset.ticker.toLowerCase() !== ticker.toLowerCase(),
     );
 
-    return this.assets.length < currentLength;
+    return true;
   }
 }
