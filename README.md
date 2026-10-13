@@ -259,6 +259,16 @@ http://localhost:5555
 
 Se o banco já tiver sido criado manualmente pelos scripts SQL da Aula 8, use esta etapa para comparar o modelo Prisma com as tabelas existentes. Nas próximas aulas, os repositórios passam a usar o Prisma Client.
 
+Repositórios Prisma:
+
+```txt
+src/infrastructure/database/prisma/client.ts
+src/infrastructure/database/prisma/PrismaAssetRepository.ts
+src/infrastructure/database/prisma/PrismaInvestorRepository.ts
+```
+
+Atualmente a factory da API usa o `PrismaAssetRepository`, mantendo o contrato `IAssetRepository` da camada de domínio.
+
 ## Scripts
 
 ```bash

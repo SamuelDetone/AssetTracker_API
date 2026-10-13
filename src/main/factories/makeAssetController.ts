@@ -3,10 +3,10 @@ import { DeleteAssetUseCase } from '../../application/use-cases/DeleteAssetUseCa
 import { GetAssetByTickerUseCase } from '../../application/use-cases/GetAssetByTickerUseCase.js';
 import { ListAssetsUseCase } from '../../application/use-cases/ListAssetsUseCase.js';
 import { UpdateAssetUseCase } from '../../application/use-cases/UpdateAssetUseCase.js';
-import { PgAssetRepository } from '../../infrastructure/database/postgres/PgAssetRepository.js';
+import { PrismaAssetRepository } from '../../infrastructure/database/prisma/PrismaAssetRepository.js';
 import { AssetController } from '../../infrastructure/http/controllers/AssetController.js';
 
-const assetRepository = new PgAssetRepository();
+const assetRepository = new PrismaAssetRepository();
 
 export function makeAssetController(): AssetController {
   return new AssetController(
