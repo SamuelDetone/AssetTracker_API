@@ -493,6 +493,8 @@ Regra de negócio:
 Um investidor pode ter no maximo 6 ativos ativos na carteira.
 ```
 
+Se o ticker informado ainda não existir no banco, a aplicação consulta o gateway de mercado, cria o ativo localmente com os dados formatados e então adiciona a posição na carteira.
+
 ### Listar carteira do investidor
 
 ```http

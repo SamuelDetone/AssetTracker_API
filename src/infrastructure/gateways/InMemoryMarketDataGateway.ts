@@ -8,6 +8,7 @@ export class InMemoryMarketDataGateway implements IMarketDataGateway {
     {
       ticker: 'AAPL',
       name: 'Apple Inc.',
+      type: 'stock',
       currency: 'USD',
       exchange: 'NASDAQ',
       price: 180.5,
@@ -16,6 +17,7 @@ export class InMemoryMarketDataGateway implements IMarketDataGateway {
     {
       ticker: 'PETR4.SA',
       name: 'Petrobras PN',
+      type: 'stock',
       currency: 'BRL',
       exchange: 'B3',
       price: 35.75,
@@ -24,6 +26,7 @@ export class InMemoryMarketDataGateway implements IMarketDataGateway {
     {
       ticker: 'MCHI',
       name: 'iShares MSCI China ETF',
+      type: 'etf',
       currency: 'USD',
       exchange: 'NASDAQ',
       price: 45.2,

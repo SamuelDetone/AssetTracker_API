@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 
+import { AssetType } from '../../domain/entities/Asset.js';
 import { AppError } from '../../domain/errors/AppError.js';
 import {
   ExternalAssetDetails,
@@ -13,6 +14,7 @@ type YahooQuoteResponse = {
       fullExchangeName?: string;
       longName?: string;
       marketState?: string;
+      quoteType?: string;
       regularMarketPrice?: number;
       shortName?: string;
       symbol?: string;
@@ -46,6 +48,7 @@ export class YahooFinanceGateway implements IMarketDataGateway {
       return {
         ticker: quote.symbol,
         name: quote.longName ?? quote.shortName ?? quote.symbol,
+        type: this.mapQuoteTypeToAssetType(quote.quoteType),
         currency: quote.currency ?? 'USD',
         exchange: quote.fullExchangeName,
         price: quote.regularMarketPrice,
@@ -61,5 +64,17 @@ export class YahooFinanceGateway implements IMarketDataGateway {
         503,
       );
     }
+  }
+
+  private mapQuoteTypeToAssetType(quoteType?: string): AssetType {
+    if (quoteType === 'ETF') {
+      return 'etf';
+    }
+
+    if (quoteType === 'CRYPTOCURRENCY') {
+      return 'crypto';
+    }
+
+    return 'stock';
   }
 }

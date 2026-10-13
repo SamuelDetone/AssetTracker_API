@@ -5,10 +5,12 @@ import { PrismaAssetRepository } from '../../infrastructure/database/prisma/Pris
 import { PrismaHoldingRepository } from '../../infrastructure/database/prisma/PrismaHoldingRepository.js';
 import { PrismaInvestorRepository } from '../../infrastructure/database/prisma/PrismaInvestorRepository.js';
 import { InvestorController } from '../../infrastructure/http/controllers/InvestorController.js';
+import { makeMarketDataGateway } from './makeMarketDataGateway.js';
 
 const investorRepository = new PrismaInvestorRepository();
 const assetRepository = new PrismaAssetRepository();
 const holdingRepository = new PrismaHoldingRepository();
+const marketDataGateway = makeMarketDataGateway();
 
 export function makeInvestorController(): InvestorController {
   return new InvestorController(
@@ -17,6 +19,7 @@ export function makeInvestorController(): InvestorController {
       investorRepository,
       assetRepository,
       holdingRepository,
+      marketDataGateway,
     ),
     new ListInvestorPortfolioUseCase(investorRepository, holdingRepository),
   );

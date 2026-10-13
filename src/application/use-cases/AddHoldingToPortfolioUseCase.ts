@@ -1,5 +1,6 @@
 import { Holding } from '../../domain/entities/Holding.js';
 import { AppError } from '../../domain/errors/AppError.js';
+import { IMarketDataGateway } from '../../domain/gateways/IMarketDataGateway.js';
 import { IAssetRepository } from '../../domain/repositories/IAssetRepository.js';
 import { IHoldingRepository } from '../../domain/repositories/IHoldingRepository.js';
 import { IInvestorRepository } from '../../domain/repositories/IInvestorRepository.js';
@@ -15,6 +16,7 @@ export class AddHoldingToPortfolioUseCase {
     private readonly investorRepository: IInvestorRepository,
     private readonly assetRepository: IAssetRepository,
     private readonly holdingRepository: IHoldingRepository,
+    private readonly marketDataGateway: IMarketDataGateway,
   ) {}
 
   async execute(data: AddHoldingToPortfolioInput): Promise<Holding> {
@@ -34,10 +36,26 @@ export class AddHoldingToPortfolioUseCase {
       );
     }
 
-    const asset = await this.assetRepository.findByTicker(data.ticker);
+    let asset = await this.assetRepository.findByTicker(data.ticker);
 
     if (!asset) {
-      throw new AppError('Asset not found.', 404);
+      const externalAsset = await this.marketDataGateway.findByTicker(
+        data.ticker,
+      );
+
+      if (!externalAsset) {
+        throw new AppError('Asset not found in market data provider.', 404);
+      }
+
+      asset = await this.assetRepository.create({
+        ticker: externalAsset.ticker,
+        name: externalAsset.name,
+        type: externalAsset.type,
+        currency: externalAsset.currency,
+        exchange: externalAsset.exchange,
+        quantity: 0,
+        averagePrice: externalAsset.price ?? 0,
+      });
     }
 
     return this.holdingRepository.create({
