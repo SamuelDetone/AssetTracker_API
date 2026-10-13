@@ -16,11 +16,17 @@ export function validateRequest(schemas: RequestSchemas) {
     }
 
     if (schemas.params) {
-      request.params = schemas.params.parse(request.params) as ParamsDictionary;
+      const parsedParams = schemas.params.parse(
+        request.params,
+      ) as ParamsDictionary;
+
+      Object.assign(request.params, parsedParams);
     }
 
     if (schemas.query) {
-      request.query = schemas.query.parse(request.query) as ParsedQs;
+      const parsedQuery = schemas.query.parse(request.query) as ParsedQs;
+
+      Object.assign(request.query, parsedQuery);
     }
 
     next();

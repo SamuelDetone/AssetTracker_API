@@ -8,7 +8,7 @@ services:
     environment:
       PORT: ${PORT:-3333}
       NODE_ENV: ${NODE_ENV:-development}
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
     volumes:
       - .:/app
       - /app/node_modules
