@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Investor {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String    @db.VarChar(150)
+  email     String    @unique @db.VarChar(255)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  holdings  Holding[]
+
+  @@map("investors")
+}
+
+model Asset {
+  ticker       String    @id @db.VarChar(20)
+  name         String    @db.VarChar(150)
+  type         String    @db.VarChar(20)
+  currency     String    @db.VarChar(10)
+  exchange     String?   @db.VarChar(80)
+  quantity     Decimal   @default(0) @db.Decimal(14, 6)
+  averagePrice Decimal   @default(0) @map("average_price") @db.Decimal(14, 2)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  holdings     Holding[]
+
+  @@index([name], map: "idx_assets_name")
+  @@map("assets")
+}
+
+model Holding {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  investorId  String   @map("investor_id") @db.Uuid
+  assetTicker String   @map("asset_ticker") @db.VarChar(20)
+  quantity    Decimal  @db.Decimal(14, 6)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  investor Investor @relation(fields: [investorId], references: [id], onDelete: Cascade)
+  asset    Asset    @relation(fields: [assetTicker], references: [ticker], onDelete: Restrict)
+
+  @@unique([investorId, assetTicker])
+  @@index([investorId], map: "idx_holdings_investor_id")
+  @@map("holdings")
+}

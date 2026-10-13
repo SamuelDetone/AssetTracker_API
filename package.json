@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "tsx watch src/main/server.ts",
     "build": "tsc",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
   },
   "keywords": [],
   "author": "",
@@ -23,11 +26,13 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "prettier": "^3.9.6",
+    "prisma": "^5.22.0",
     "swagger-autogen": "^2.23.7",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@prisma/client": "^5.22.0",
     "express": "^5.2.1",
     "pg": "^8.23.1",
     "swagger-ui-express": "^5.0.1"

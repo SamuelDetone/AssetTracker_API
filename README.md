@@ -234,6 +234,31 @@ src/infrastructure/database/postgres/PgInvestorRepository.ts
 
 O `PgAssetRepository` substitui o repositório em memória na factory da API. Por isso, antes de testar os endpoints de ativos com Docker, execute `database/schema.sql` e `database/seed.sql` no banco.
 
+## Prisma
+
+O projeto possui configuração inicial do Prisma em:
+
+```txt
+prisma/schema.prisma
+prisma/migrations/
+```
+
+Comandos úteis:
+
+```bash
+npm run prisma:generate
+npm run prisma:migrate -- --name init
+npm run prisma:studio
+```
+
+O Prisma Studio abre em:
+
+```txt
+http://localhost:5555
+```
+
+Se o banco já tiver sido criado manualmente pelos scripts SQL da Aula 8, use esta etapa para comparar o modelo Prisma com as tabelas existentes. Nas próximas aulas, os repositórios passam a usar o Prisma Client.
+
 ## Scripts
 
 ```bash
@@ -253,6 +278,24 @@ npm run lint
 ```
 
 Verifica padrões de código com ESLint e Prettier.
+
+```bash
+npm run prisma:generate
+```
+
+Gera o Prisma Client.
+
+```bash
+npm run prisma:migrate -- --name init
+```
+
+Executa migrations do Prisma no PostgreSQL.
+
+```bash
+npm run prisma:studio
+```
+
+Abre a interface visual do Prisma Studio.
 
 ```bash
 docker compose up -d
