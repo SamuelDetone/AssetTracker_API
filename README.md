@@ -280,6 +280,14 @@ src/infrastructure/http/schemas/investorSchemas.ts
 
 Eles definem regras para validar payloads, params e queries antes dos dados chegarem aos casos de uso. Na próxima etapa, esses schemas serão conectados às rotas por um middleware de validação.
 
+O middleware responsável por aplicar os schemas nas rotas é:
+
+```txt
+src/infrastructure/http/middlewares/validateRequest.ts
+```
+
+Quando o Zod encontra dados inválidos, o `errorHandler` retorna status `400 Bad Request` com os campos e mensagens de erro.
+
 ## Scripts
 
 ```bash
