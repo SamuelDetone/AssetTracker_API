@@ -269,6 +269,17 @@ src/infrastructure/database/prisma/PrismaInvestorRepository.ts
 
 Atualmente a factory da API usa o `PrismaAssetRepository`, mantendo o contrato `IAssetRepository` da camada de domínio.
 
+## Validação Com Zod
+
+Os schemas de validação ficam em:
+
+```txt
+src/infrastructure/http/schemas/assetSchemas.ts
+src/infrastructure/http/schemas/investorSchemas.ts
+```
+
+Eles definem regras para validar payloads, params e queries antes dos dados chegarem aos casos de uso. Na próxima etapa, esses schemas serão conectados às rotas por um middleware de validação.
+
 ## Scripts
 
 ```bash
