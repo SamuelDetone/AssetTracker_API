@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 
 import { AppError } from '../../../domain/errors/AppError.js';
+import { mapPrismaError } from '../../database/prisma/prismaErrorMapper.js';
 
 export function errorHandler(
   error: Error,
@@ -26,6 +27,16 @@ export function errorHandler(
       status: 'error',
       statusCode: error.statusCode,
       message: error.message,
+    });
+  }
+
+  const prismaError = mapPrismaError(error);
+
+  if (prismaError) {
+    return response.status(prismaError.statusCode).json({
+      status: 'error',
+      statusCode: prismaError.statusCode,
+      message: prismaError.message,
     });
   }
 

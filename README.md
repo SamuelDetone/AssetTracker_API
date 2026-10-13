@@ -269,6 +269,20 @@ src/infrastructure/database/prisma/PrismaInvestorRepository.ts
 
 Atualmente a factory da API usa o `PrismaAssetRepository`, mantendo o contrato `IAssetRepository` da camada de domínio.
 
+Erros conhecidos do Prisma são convertidos para respostas HTTP pelo mapper:
+
+```txt
+src/infrastructure/database/prisma/prismaErrorMapper.ts
+```
+
+Exemplos:
+
+```txt
+P2002 -> 409 Conflict para registro duplicado
+P2003 -> 400 Bad Request para relacionamento inválido
+P2025 -> 404 Not Found para registro inexistente
+```
+
 ## Validação Com Zod
 
 Os schemas de validação ficam em:
