@@ -188,6 +188,42 @@ Base de dados: assettracker_db
 
 No primeiro momento, o banco ainda pode estar sem tabelas. As tabelas entram na próxima etapa, quando configurarmos Prisma e migrations.
 
+## Banco Relacional Inicial
+
+A pasta `database/` possui scripts SQL para criar a estrutura inicial do banco pelo Adminer ou por outro cliente PostgreSQL.
+
+Arquivos:
+
+```txt
+database/schema.sql
+database/seed.sql
+```
+
+Para executar pelo Adminer:
+
+1. Suba os containers com `docker compose up -d`.
+2. Abra `http://localhost:8080`.
+3. Acesse o banco `assettracker_db`.
+4. Abra a opção de comando SQL.
+5. Execute o conteúdo de `database/schema.sql`.
+6. Execute o conteúdo de `database/seed.sql`.
+
+Tabelas criadas:
+
+```txt
+investors - investidores cadastrados
+assets    - ativos financeiros disponíveis
+holdings  - ativos associados à carteira de um investidor
+```
+
+Consultas úteis para verificar:
+
+```sql
+SELECT * FROM investors;
+SELECT * FROM assets;
+SELECT * FROM holdings;
+```
+
 ## Scripts
 
 ```bash
