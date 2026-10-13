@@ -12,6 +12,9 @@ Nesta primeira etapa, os dados ficam em memória enquanto a aplicação está ro
 - Swagger UI
 - ESLint
 - Prettier
+- Docker
+- PostgreSQL
+- Adminer
 
 ## Arquitetura
 
@@ -115,6 +118,76 @@ A documentação interativa ficará disponível em:
 http://localhost:3333/api/docs
 ```
 
+## Execução Com Docker
+
+Crie um arquivo `.env` a partir do exemplo:
+
+```bash
+copy .env.example .env
+```
+
+Depois suba os containers:
+
+```bash
+docker compose up -d
+```
+
+Esse comando inicia:
+
+- API em `http://localhost:3333`
+- PostgreSQL na porta `5432`
+- Adminer em `http://localhost:8080`
+
+Para verificar se os containers estão rodando:
+
+```bash
+docker compose ps
+```
+
+Para acompanhar os logs:
+
+```bash
+docker compose logs -f
+```
+
+Para acessar o terminal do container da API:
+
+```bash
+docker compose exec app sh
+```
+
+Para parar os containers:
+
+```bash
+docker compose down
+```
+
+Para parar e apagar também o volume do banco:
+
+```bash
+docker compose down -v
+```
+
+### Acesso Ao Adminer
+
+Abra:
+
+```txt
+http://localhost:8080
+```
+
+Use os dados:
+
+```txt
+Sistema: PostgreSQL
+Servidor: postgres
+Usuario: assettracker
+Senha: assettracker
+Base de dados: assettracker_db
+```
+
+No primeiro momento, o banco ainda pode estar sem tabelas. As tabelas entram na próxima etapa, quando configurarmos Prisma e migrations.
+
 ## Scripts
 
 ```bash
@@ -134,6 +207,18 @@ npm run lint
 ```
 
 Verifica padrões de código com ESLint e Prettier.
+
+```bash
+docker compose up -d
+```
+
+Sobe API, PostgreSQL e Adminer em containers.
+
+```bash
+docker compose down
+```
+
+Para e remove os containers.
 
 ## Endpoints
 
