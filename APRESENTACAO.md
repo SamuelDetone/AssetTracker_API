@@ -111,9 +111,21 @@ Exemplos implementados:
 
 ![Erro de validacao](docs/images/apresentacao/07-validation-error.png)
 
+![Evidencias de erros tratados](docs/images/apresentacao/09-error-examples.png)
+
 ---
 
-## 8. Funcionalidades diferentes da proposta original
+## 8. Persistencia no banco de dados
+
+O projeto usa PostgreSQL real com Prisma ORM. Os dados cadastrados pela API ficam salvos nas tabelas relacionais.
+
+![Prisma Studio com modelos do projeto](docs/images/apresentacao/10-prisma-studio.png)
+
+![Adminer com tabelas do banco](docs/images/apresentacao/11-adminer-database.png)
+
+---
+
+## 9. Funcionalidades diferentes da proposta original
 
 - O dominio foi alterado de Pokemon para investimentos.
 - A PokeAPI foi substituida por uma consulta de mercado financeiro.
@@ -122,7 +134,7 @@ Exemplos implementados:
 
 ---
 
-## 9. Funcionalidades adicionais
+## 10. Funcionalidades adicionais
 
 - Docker Compose com PostgreSQL e Adminer.
 - Swagger completo para a Entrega 2.
@@ -135,7 +147,7 @@ Exemplos implementados:
 
 ---
 
-## 10. Pendencias e observacoes
+## 11. Pendencias e observacoes
 
 - O projeto nao usa Pokemons nem PokeAPI porque o dominio foi adaptado.
 - O DTO externo nao retorna imagem de Pokemon, mas dados de ativo financeiro.
