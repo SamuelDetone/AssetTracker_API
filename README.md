@@ -224,6 +224,16 @@ SELECT * FROM assets;
 SELECT * FROM holdings;
 ```
 
+Nesta etapa, o projeto também possui repositórios PostgreSQL com consultas parametrizadas:
+
+```txt
+src/infrastructure/database/postgres/connection.ts
+src/infrastructure/database/postgres/PgAssetRepository.ts
+src/infrastructure/database/postgres/PgInvestorRepository.ts
+```
+
+O `PgAssetRepository` substitui o repositório em memória na factory da API. Por isso, antes de testar os endpoints de ativos com Docker, execute `database/schema.sql` e `database/seed.sql` no banco.
+
 ## Scripts
 
 ```bash

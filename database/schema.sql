@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS assets (
   type VARCHAR(20) NOT NULL CHECK (type IN ('stock', 'etf', 'crypto', 'fund', 'reit')),
   currency VARCHAR(10) NOT NULL,
   exchange VARCHAR(80),
+  quantity NUMERIC(14, 6) NOT NULL DEFAULT 0,
   average_price NUMERIC(14, 2) NOT NULL DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
