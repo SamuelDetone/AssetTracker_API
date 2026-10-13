@@ -18,5 +18,16 @@ export const investorIdParamsSchema = z.object({
   investorId: z.string().uuid('O id do investidor deve ser um UUID valido.'),
 });
 
+export const addHoldingSchema = z.object({
+  ticker: z
+    .string()
+    .trim()
+    .min(1, 'O ticker e obrigatorio.')
+    .max(20, 'O ticker deve ter no maximo 20 caracteres.')
+    .transform((ticker) => ticker.toUpperCase()),
+  quantity: z.number().positive('A quantidade deve ser maior que zero.'),
+});
+
 export type CreateInvestorSchema = z.infer<typeof createInvestorSchema>;
 export type InvestorIdParamsSchema = z.infer<typeof investorIdParamsSchema>;
+export type AddHoldingSchema = z.infer<typeof addHoldingSchema>;

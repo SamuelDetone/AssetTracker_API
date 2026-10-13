@@ -457,6 +457,48 @@ Resposta esperada:
 204 No Content
 ```
 
+### Criar investidor
+
+```http
+POST /api/v1/investors
+```
+
+Corpo da requisição:
+
+```json
+{
+  "name": "Samuel Detone",
+  "email": "samuel@example.com"
+}
+```
+
+### Adicionar ativo na carteira
+
+```http
+POST /api/v1/investors/:investorId/holdings
+```
+
+Corpo da requisição:
+
+```json
+{
+  "ticker": "AAPL",
+  "quantity": 2
+}
+```
+
+Regra de negócio:
+
+```txt
+Um investidor pode ter no maximo 6 ativos ativos na carteira.
+```
+
+### Listar carteira do investidor
+
+```http
+GET /api/v1/investors/:investorId/portfolio
+```
+
 ## Tratamento de Erros
 
 A API possui tratamento global de erros com `AppError` e `errorHandler`.
