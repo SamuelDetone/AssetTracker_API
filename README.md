@@ -499,6 +499,16 @@ Um investidor pode ter no maximo 6 ativos ativos na carteira.
 GET /api/v1/investors/:investorId/portfolio
 ```
 
+### Buscar ativo em provedor externo
+
+```http
+GET /api/v1/market/search?ticker=AAPL
+```
+
+Esse endpoint consulta o gateway de dados de mercado e retorna um DTO formatado com dados do ativo.
+
+Se `USE_EXTERNAL_MARKET_API=false`, a aplicação usa um gateway em memória para rodar sem internet.
+
 ## Tratamento de Erros
 
 A API possui tratamento global de erros com `AppError` e `errorHandler`.
@@ -527,7 +537,7 @@ Exemplo de erro para ativo duplicado:
 
 O yfinance pode ser usado em uma etapa futura para buscar cotações e dados históricos de ativos. Como yfinance é uma biblioteca Python, uma integração futura pode ser feita por meio de um serviço Python separado ou por um script chamado pela API Node.js.
 
-Nesta entrega, a API ainda não consome dados online. Ela apenas deixa o domínio preparado para essa evolução.
+Nesta entrega, a API possui um gateway externo HTTP para busca simples de tickers e um gateway em memória para fallback/offline. A integração com yfinance pode substituir essa implementação no futuro sem alterar a camada de domínio.
 
 ## Status da Entrega 1
 
