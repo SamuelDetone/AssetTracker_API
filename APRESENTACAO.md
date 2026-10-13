@@ -134,13 +134,13 @@ O projeto usa PostgreSQL real com Prisma ORM. Os dados cadastrados pela API fica
 
 ---
 
-## 10. Funcionalidades adicionais
+## 10. Extras de desenvolvimento e apresentacao
 
-- Docker Compose com PostgreSQL e Adminer.
-- Swagger completo para a Entrega 2.
-- Fallback local para a integracao externa.
-- Logs HTTP no terminal.
-- Tratamento de erros especificos do Prisma.
+- Adminer para visualizar as tabelas do PostgreSQL.
+- Swagger completo com os endpoints da Entrega 2.
+- Fallback local para demonstrar a busca externa mesmo se a API de mercado falhar.
+- Logs HTTP no terminal para acompanhar GET, POST, PUT e DELETE.
+- Tratamento especifico de erros do Prisma.
 - Porta `5433` para evitar conflito com outro Postgres local.
 
 ![Swagger completo](docs/images/apresentacao/08-swagger-investors.png)
