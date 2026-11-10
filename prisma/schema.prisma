@@ -7,10 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum InvestorRole {
+  USER
+  ADMIN
+}
+
 model Investor {
   id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String    @db.VarChar(150)
   email     String    @unique @db.VarChar(255)
+  password  String
+  role      InvestorRole @default(USER)
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   holdings  Holding[]
 

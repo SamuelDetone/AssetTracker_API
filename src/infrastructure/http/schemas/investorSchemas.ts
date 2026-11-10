@@ -12,6 +12,10 @@ export const createInvestorSchema = z.object({
     .email('Informe um e-mail valido.')
     .max(255, 'O e-mail deve ter no maximo 255 caracteres.')
     .transform((email) => email.toLowerCase()),
+  password: z
+    .string()
+    .min(8, 'A senha deve ter no minimo 8 caracteres.')
+    .max(72, 'A senha deve ter no maximo 72 caracteres.'),
 });
 
 export const investorIdParamsSchema = z.object({
