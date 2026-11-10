@@ -4,18 +4,22 @@ import swaggerUi from 'swagger-ui-express';
 import { errorHandler } from '../infrastructure/http/middlewares/errorHandler.js';
 import { requestLogger } from '../infrastructure/http/middlewares/requestLogger.js';
 import { assetRoutes } from '../infrastructure/http/routes/assetRoutes.js';
+import { authRoutes } from '../infrastructure/http/routes/authRoutes.js';
 import { investorRoutes } from '../infrastructure/http/routes/investorRoutes.js';
 import { marketRoutes } from '../infrastructure/http/routes/marketRoutes.js';
+import { parseCookies } from '../infrastructure/http/middlewares/parseCookies.js';
 import { openApiDocument } from './docs/openApi.js';
 
 const app = express();
 const port = process.env.PORT ?? 3333;
 
 app.use(express.json());
+app.use(parseCookies);
 app.use(requestLogger);
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openApiDocument));
 app.use('/api/v1', assetRoutes);
+app.use('/api/v1', authRoutes);
 app.use('/api/v1', investorRoutes);
 app.use('/api/v1', marketRoutes);
 app.use(errorHandler);

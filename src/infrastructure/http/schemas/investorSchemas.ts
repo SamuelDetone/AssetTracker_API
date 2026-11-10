@@ -22,6 +22,10 @@ export const investorIdParamsSchema = z.object({
   investorId: z.string().uuid('O id do investidor deve ser um UUID valido.'),
 });
 
+export const updateInvestorRoleSchema = z.object({
+  role: z.enum(['USER', 'ADMIN']),
+});
+
 export const addHoldingSchema = z.object({
   ticker: z
     .string()

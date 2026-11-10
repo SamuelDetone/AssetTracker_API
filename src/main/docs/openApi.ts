@@ -25,8 +25,58 @@ export const openApiDocument = {
       name: 'Investors',
       description: 'Cadastro de investidores e gerenciamento de carteira.',
     },
+    {
+      name: 'Auth',
+      description: 'Login, renovacao de sessao e autorizacao por papel.',
+    },
   ],
   paths: {
+    '/api/v1/auth/login': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Autentica um investidor',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/Login' },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description:
+              'Login concluido e refresh token salvo em cookie HttpOnly.',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/AuthenticationResponse' },
+              },
+            },
+          },
+          '400': { $ref: '#/components/responses/BadRequest' },
+          '401': { $ref: '#/components/responses/Unauthorized' },
+        },
+      },
+    },
+    '/api/v1/auth/refresh-token': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Renova a sessao usando o refresh token em cookie',
+        description:
+          'Le o cookie HttpOnly refreshToken, gera um novo access token e substitui o cookie de refresh.',
+        responses: {
+          '200': {
+            description: 'Sessao renovada.',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/AuthenticationResponse' },
+              },
+            },
+          },
+          '401': { $ref: '#/components/responses/Unauthorized' },
+        },
+      },
+    },
     '/api/v1/assets': {
       get: {
         tags: ['Assets'],
@@ -216,6 +266,7 @@ export const openApiDocument = {
         summary: 'Adiciona um ativo a carteira do investidor',
         description:
           'Recebe o ticker e o ID do investidor, consulta o provedor de mercado se o ativo ainda nao existir no catalogo local e valida o limite de 6 ativos ativos na carteira.',
+        security: [{ bearerAuth: [] }],
         parameters: [{ $ref: '#/components/parameters/InvestorId' }],
         requestBody: {
           required: true,
@@ -241,10 +292,41 @@ export const openApiDocument = {
         },
       },
     },
+    '/api/v1/investors/{investorId}/role': {
+      patch: {
+        tags: ['Investors'],
+        summary: 'Altera o papel de um investidor',
+        description: 'Requer um access token de administrador.',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ $ref: '#/components/parameters/InvestorId' }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/UpdateInvestorRole' },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: 'Papel atualizado.',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/Investor' },
+              },
+            },
+          },
+          '401': { $ref: '#/components/responses/Unauthorized' },
+          '403': { $ref: '#/components/responses/Forbidden' },
+          '404': { $ref: '#/components/responses/NotFound' },
+        },
+      },
+    },
     '/api/v1/investors/{investorId}/portfolio': {
       get: {
         tags: ['Investors'],
         summary: 'Lista a carteira ativa do investidor',
+        security: [{ bearerAuth: [] }],
         parameters: [{ $ref: '#/components/parameters/InvestorId' }],
         responses: {
           '200': {
@@ -319,6 +401,30 @@ export const openApiDocument = {
           },
         },
       },
+      Unauthorized: {
+        description: 'Autenticacao obrigatoria ou token invalido.',
+        content: {
+          'application/json': {
+            schema: { $ref: '#/components/schemas/ErrorResponse' },
+          },
+        },
+      },
+      Forbidden: {
+        description:
+          'O usuario autenticado nao tem permissao para este recurso.',
+        content: {
+          'application/json': {
+            schema: { $ref: '#/components/schemas/ErrorResponse' },
+          },
+        },
+      },
+    },
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
     },
     schemas: {
       AssetType: {
@@ -391,14 +497,46 @@ export const openApiDocument = {
           },
           name: { type: 'string', example: 'Samuel Detone' },
           email: { type: 'string', example: 'samuel.detone@email.com' },
+          role: { type: 'string', enum: ['USER', 'ADMIN'], example: 'USER' },
         },
       },
       CreateInvestor: {
         type: 'object',
-        required: ['name', 'email'],
+        required: ['name', 'email', 'password'],
         properties: {
           name: { type: 'string', example: 'Samuel Detone' },
           email: { type: 'string', example: 'samuel.detone@email.com' },
+          password: {
+            type: 'string',
+            format: 'password',
+            example: 'senha-segura',
+          },
+        },
+      },
+      Login: {
+        type: 'object',
+        required: ['email', 'password'],
+        properties: {
+          email: { type: 'string', example: 'samuel.detone@email.com' },
+          password: {
+            type: 'string',
+            format: 'password',
+            example: 'senha-segura',
+          },
+        },
+      },
+      AuthenticationResponse: {
+        type: 'object',
+        properties: {
+          investor: { $ref: '#/components/schemas/Investor' },
+          accessToken: { type: 'string', description: 'JWT de curta duracao.' },
+        },
+      },
+      UpdateInvestorRole: {
+        type: 'object',
+        required: ['role'],
+        properties: {
+          role: { type: 'string', enum: ['USER', 'ADMIN'], example: 'ADMIN' },
         },
       },
       AddHolding: {

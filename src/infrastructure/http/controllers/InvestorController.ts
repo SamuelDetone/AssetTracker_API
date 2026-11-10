@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { AddHoldingToPortfolioUseCase } from '../../../application/use-cases/AddHoldingToPortfolioUseCase.js';
 import { CreateInvestorUseCase } from '../../../application/use-cases/CreateInvestorUseCase.js';
 import { ListInvestorPortfolioUseCase } from '../../../application/use-cases/ListInvestorPortfolioUseCase.js';
+import { UpdateInvestorRoleUseCase } from '../../../application/use-cases/UpdateInvestorRoleUseCase.js';
 import { AppError } from '../../../domain/errors/AppError.js';
 
 export class InvestorController {
@@ -10,6 +11,7 @@ export class InvestorController {
     private readonly createInvestorUseCase: CreateInvestorUseCase,
     private readonly addHoldingToPortfolioUseCase: AddHoldingToPortfolioUseCase,
     private readonly listInvestorPortfolioUseCase: ListInvestorPortfolioUseCase,
+    private readonly updateInvestorRoleUseCase: UpdateInvestorRoleUseCase,
   ) {}
 
   create = async (request: Request, response: Response): Promise<Response> => {
@@ -23,6 +25,7 @@ export class InvestorController {
     response: Response,
   ): Promise<Response> => {
     const investorId = this.getInvestorIdFromParams(request);
+    this.assertCanAccessInvestor(request, investorId);
     const holding = await this.addHoldingToPortfolioUseCase.execute({
       investorId,
       ticker: request.body.ticker,
@@ -37,10 +40,24 @@ export class InvestorController {
     response: Response,
   ): Promise<Response> => {
     const investorId = this.getInvestorIdFromParams(request);
+    this.assertCanAccessInvestor(request, investorId);
     const portfolio =
       await this.listInvestorPortfolioUseCase.execute(investorId);
 
     return response.json(portfolio);
+  };
+
+  updateRole = async (
+    request: Request,
+    response: Response,
+  ): Promise<Response> => {
+    const investorId = this.getInvestorIdFromParams(request);
+    const investor = await this.updateInvestorRoleUseCase.execute(
+      investorId,
+      request.body.role,
+    );
+
+    return response.json(investor);
   };
 
   private getInvestorIdFromParams(request: Request): string {
@@ -51,5 +68,18 @@ export class InvestorController {
     }
 
     return investorId;
+  }
+
+  private assertCanAccessInvestor(request: Request, investorId: string): void {
+    if (!request.user) {
+      throw new AppError('Usuario nao autenticado.', 401);
+    }
+
+    if (request.user.role === 'USER' && request.user.id !== investorId) {
+      throw new AppError(
+        'Voce nao tem permissao para alterar a carteira de outro investidor.',
+        403,
+      );
+    }
   }
 }
