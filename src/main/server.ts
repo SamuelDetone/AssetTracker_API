@@ -1,7 +1,11 @@
+import cors from 'cors';
 import express from 'express';
+import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
 
 import { env } from '../infrastructure/config/env.js';
+import { corsOptions } from '../infrastructure/http/config/corsOptions.js';
+import { helmetOptions } from '../infrastructure/http/config/helmetOptions.js';
 import { errorHandler } from '../infrastructure/http/middlewares/errorHandler.js';
 import { requestLogger } from '../infrastructure/http/middlewares/requestLogger.js';
 import { assetRoutes } from '../infrastructure/http/routes/assetRoutes.js';
@@ -14,6 +18,8 @@ import { openApiDocument } from './docs/openApi.js';
 const app = express();
 const port = env.PORT;
 
+app.use(helmet(helmetOptions));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(parseCookies);
 app.use(requestLogger);
