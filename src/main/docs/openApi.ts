@@ -55,6 +55,8 @@ export const openApiDocument = {
           },
           '400': { $ref: '#/components/responses/BadRequest' },
           '401': { $ref: '#/components/responses/Unauthorized' },
+          '413': { $ref: '#/components/responses/PayloadTooLarge' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
         },
       },
     },
@@ -74,6 +76,7 @@ export const openApiDocument = {
             },
           },
           '401': { $ref: '#/components/responses/Unauthorized' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
         },
       },
     },
@@ -117,6 +120,7 @@ export const openApiDocument = {
             },
           },
           '400': { $ref: '#/components/responses/BadRequest' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
         },
       },
       post: {
@@ -141,6 +145,8 @@ export const openApiDocument = {
           },
           '400': { $ref: '#/components/responses/BadRequest' },
           '409': { $ref: '#/components/responses/Conflict' },
+          '413': { $ref: '#/components/responses/PayloadTooLarge' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
         },
       },
     },
@@ -160,6 +166,7 @@ export const openApiDocument = {
           },
           '400': { $ref: '#/components/responses/BadRequest' },
           '404': { $ref: '#/components/responses/NotFound' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
         },
       },
       put: {
@@ -185,6 +192,8 @@ export const openApiDocument = {
           },
           '400': { $ref: '#/components/responses/BadRequest' },
           '404': { $ref: '#/components/responses/NotFound' },
+          '413': { $ref: '#/components/responses/PayloadTooLarge' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
         },
       },
       delete: {
@@ -197,6 +206,7 @@ export const openApiDocument = {
           },
           '400': { $ref: '#/components/responses/BadRequest' },
           '404': { $ref: '#/components/responses/NotFound' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
         },
       },
     },
@@ -230,6 +240,7 @@ export const openApiDocument = {
           '400': { $ref: '#/components/responses/BadRequest' },
           '404': { $ref: '#/components/responses/NotFound' },
           '503': { $ref: '#/components/responses/ServiceUnavailable' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
         },
       },
     },
@@ -257,6 +268,8 @@ export const openApiDocument = {
           '400': { $ref: '#/components/responses/BadRequest' },
           '409': { $ref: '#/components/responses/Conflict' },
           '503': { $ref: '#/components/responses/ServiceUnavailable' },
+          '413': { $ref: '#/components/responses/PayloadTooLarge' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
         },
       },
     },
@@ -289,6 +302,10 @@ export const openApiDocument = {
           '404': { $ref: '#/components/responses/NotFound' },
           '409': { $ref: '#/components/responses/Conflict' },
           '503': { $ref: '#/components/responses/ServiceUnavailable' },
+          '401': { $ref: '#/components/responses/Unauthorized' },
+          '403': { $ref: '#/components/responses/Forbidden' },
+          '413': { $ref: '#/components/responses/PayloadTooLarge' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
         },
       },
     },
@@ -319,6 +336,8 @@ export const openApiDocument = {
           '401': { $ref: '#/components/responses/Unauthorized' },
           '403': { $ref: '#/components/responses/Forbidden' },
           '404': { $ref: '#/components/responses/NotFound' },
+          '413': { $ref: '#/components/responses/PayloadTooLarge' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
         },
       },
     },
@@ -341,7 +360,11 @@ export const openApiDocument = {
             },
           },
           '400': { $ref: '#/components/responses/BadRequest' },
+          '401': { $ref: '#/components/responses/Unauthorized' },
+          '403': { $ref: '#/components/responses/Forbidden' },
+          '404': { $ref: '#/components/responses/NotFound' },
           '503': { $ref: '#/components/responses/ServiceUnavailable' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
         },
       },
     },
@@ -412,6 +435,22 @@ export const openApiDocument = {
       Forbidden: {
         description:
           'O usuario autenticado nao tem permissao para este recurso.',
+        content: {
+          'application/json': {
+            schema: { $ref: '#/components/schemas/ErrorResponse' },
+          },
+        },
+      },
+      PayloadTooLarge: {
+        description: 'O corpo da requisicao ultrapassa o limite de 10kb.',
+        content: {
+          'application/json': {
+            schema: { $ref: '#/components/schemas/ErrorResponse' },
+          },
+        },
+      },
+      TooManyRequests: {
+        description: 'O limite de requisicoes para este IP foi atingido.',
         content: {
           'application/json': {
             schema: { $ref: '#/components/schemas/ErrorResponse' },

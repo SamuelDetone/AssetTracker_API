@@ -1,8 +1,8 @@
 # AssetTracker API
 
-API REST desenvolvida em Node.js, TypeScript e Express para gerenciamento local de ativos financeiros. O projeto foi criado para a Entrega 1 da disciplina, com foco em Clean Architecture, repositório em memória, contrato REST e documentação interativa com Swagger/OpenAPI.
+API REST desenvolvida em Node.js, TypeScript e Express para gerenciamento de ativos financeiros, investidores e carteiras. O projeto evolui ao longo das entregas da disciplina, aplicando Clean Architecture, persistencia relacional, autenticacao JWT e integracao com dados de mercado.
 
-Nesta primeira etapa, os dados ficam em memória enquanto a aplicação está rodando. A estrutura foi pensada para permitir evolução futura com banco de dados, autenticação e integração externa para cotações, como yfinance.
+A aplicacao usa PostgreSQL com Prisma para os dados persistentes. A consulta de mercado fica atras de uma interface de gateway, permitindo trocar o provedor externo no futuro sem alterar as regras de negocio.
 
 ## Tecnologias
 
@@ -135,7 +135,7 @@ docker compose up -d
 Esse comando inicia:
 
 - API em `http://localhost:3333`
-- PostgreSQL na porta `5432`
+- PostgreSQL na porta definida por `POSTGRES_PORT` (por padrao, `5433`)
 - Adminer em `http://localhost:8080`
 
 Para verificar se os containers estão rodando:
@@ -292,7 +292,7 @@ src/infrastructure/http/schemas/assetSchemas.ts
 src/infrastructure/http/schemas/investorSchemas.ts
 ```
 
-Eles definem regras para validar payloads, params e queries antes dos dados chegarem aos casos de uso. Na próxima etapa, esses schemas serão conectados às rotas por um middleware de validação.
+Eles definem regras para validar payloads, params e queries antes dos dados chegarem aos casos de uso. As rotas aplicam esses schemas por meio de um middleware de validacao.
 
 O middleware responsável por aplicar os schemas nas rotas é:
 
@@ -301,6 +301,81 @@ src/infrastructure/http/middlewares/validateRequest.ts
 ```
 
 Quando o Zod encontra dados inválidos, o `errorHandler` retorna status `400 Bad Request` com os campos e mensagens de erro.
+
+## Seguranca e Configuracao
+
+As configuracoes de ambiente sao validadas pelo Zod assim que a aplicacao inicia. Se uma variavel obrigatoria estiver ausente ou invalida, o servidor nao inicia com uma configuracao insegura.
+
+Crie o arquivo local de configuracao a partir do modelo:
+
+```bash
+copy .env.example .env
+```
+
+As variaveis mais importantes sao:
+
+```txt
+DATABASE_URL          Conexao com o PostgreSQL
+FRONTEND_URL          Origem permitida pelo CORS
+JWT_ACCESS_SECRET     Chave do token de acesso (minimo de 32 caracteres)
+JWT_REFRESH_SECRET    Chave do refresh token (minimo de 32 caracteres)
+USE_EXTERNAL_MARKET_API Habilita ou desabilita a consulta externa de mercado
+```
+
+O arquivo `.env` contem dados locais e chaves secretas, por isso nao deve ser enviado ao Git. Use apenas o `.env.example` como modelo.
+
+Protecoes implementadas:
+
+- `helmet` adiciona headers HTTP defensivos e oculta o `X-Powered-By`.
+- CORS aceita somente a origem definida em `FRONTEND_URL` para requisicoes feitas por navegadores.
+- O limite geral e de 100 requisicoes por IP a cada 15 minutos. As rotas de autenticacao aceitam 5 tentativas a cada 5 minutos.
+- JSON e formularios tem limite de 10kb. Campos de texto e chaves suspeitas sao higienizados antes da validacao.
+- Rotas de carteira exigem access token JWT no cabecalho `Authorization: Bearer <token>`; o refresh token e mantido em cookie `HttpOnly`.
+
+No Swagger, use o botao **Authorize** para informar o access token nas rotas protegidas. A documentacao tambem descreve as respostas `401`, `403`, `413` e `429`.
+
+### Testes Manuais de Seguranca
+
+Com a API em execucao (`npm run dev`), estes comandos podem ser usados no PowerShell:
+
+Verificar headers de seguranca:
+
+```powershell
+(Invoke-WebRequest -Uri http://localhost:3333/api/docs -Method Head).Headers
+```
+
+Confirmar que um payload acima de 10kb retorna `413`:
+
+```powershell
+$body = @{
+  ticker = 'LONG'
+  name = 'A' * 11000
+  type = 'stock'
+  currency = 'USD'
+  exchange = 'TEST'
+  quantity = 1
+  averagePrice = 1
+} | ConvertTo-Json
+
+try {
+  Invoke-WebRequest -Uri http://localhost:3333/api/v1/assets -Method Post -ContentType 'application/json' -Body $body
+} catch {
+  $_.ErrorDetails.Message
+}
+```
+
+Confirmar o limite de tentativas de autenticacao. Reinicie a API antes deste teste para limpar o contador local; a sexta tentativa deve retornar `429`:
+
+```powershell
+$login = @{ email = 'naoexiste@example.com'; password = 'senha-invalida' } | ConvertTo-Json
+1..6 | ForEach-Object {
+  try {
+    (Invoke-WebRequest -Uri http://localhost:3333/api/v1/auth/login -Method Post -ContentType 'application/json' -Body $login).StatusCode
+  } catch {
+    [int]$_.Exception.Response.StatusCode
+  }
+}
+```
 
 ## Scripts
 
@@ -468,7 +543,8 @@ Corpo da requisição:
 ```json
 {
   "name": "Samuel Detone",
-  "email": "samuel@example.com"
+  "email": "samuel@example.com",
+  "password": "uma-senha-com-pelo-menos-8-caracteres"
 }
 ```
 
@@ -513,7 +589,16 @@ Se `USE_EXTERNAL_MARKET_API=false`, a aplicação usa um gateway em memória par
 
 ## Tratamento de Erros
 
-A API possui tratamento global de erros com `AppError` e `errorHandler`.
+A API possui tratamento global de erros com `AppError`, `errorHandler` e tratamento de falhas conhecidas do Prisma.
+
+Os erros de autenticacao e seguranca tambem possuem respostas padronizadas:
+
+```txt
+401 - Token ausente, invalido ou expirado
+403 - Usuario sem permissao para o recurso
+413 - Corpo da requisicao maior que 10kb
+429 - Limite de requisicoes atingido
+```
 
 Exemplo de erro para ativo inexistente:
 
