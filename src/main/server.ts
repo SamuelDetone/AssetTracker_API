@@ -8,6 +8,10 @@ import { corsOptions } from '../infrastructure/http/config/corsOptions.js';
 import { helmetOptions } from '../infrastructure/http/config/helmetOptions.js';
 import { errorHandler } from '../infrastructure/http/middlewares/errorHandler.js';
 import { requestLogger } from '../infrastructure/http/middlewares/requestLogger.js';
+import {
+  apiRateLimiter,
+  authRateLimiter,
+} from '../infrastructure/http/middlewares/rateLimiters.js';
 import { assetRoutes } from '../infrastructure/http/routes/assetRoutes.js';
 import { authRoutes } from '../infrastructure/http/routes/authRoutes.js';
 import { investorRoutes } from '../infrastructure/http/routes/investorRoutes.js';
@@ -20,13 +24,14 @@ const port = env.PORT;
 
 app.use(helmet(helmetOptions));
 app.use(cors(corsOptions));
+app.use('/api/v1', apiRateLimiter);
 app.use(express.json());
 app.use(parseCookies);
 app.use(requestLogger);
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openApiDocument));
 app.use('/api/v1', assetRoutes);
-app.use('/api/v1', authRoutes);
+app.use('/api/v1', authRateLimiter, authRoutes);
 app.use('/api/v1', investorRoutes);
 app.use('/api/v1', marketRoutes);
 app.use(errorHandler);
