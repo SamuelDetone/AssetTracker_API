@@ -6,6 +6,7 @@ import {
   ExternalAssetDetails,
   IMarketDataGateway,
 } from '../../domain/gateways/IMarketDataGateway.js';
+import { env } from '../config/env.js';
 
 type YahooQuoteResponse = {
   quoteResponse?: {
@@ -23,9 +24,7 @@ type YahooQuoteResponse = {
 };
 
 export class YahooFinanceGateway implements IMarketDataGateway {
-  private readonly baseUrl =
-    process.env.MARKET_API_BASE_URL ??
-    'https://query1.finance.yahoo.com/v7/finance';
+  private readonly baseUrl = env.MARKET_API_BASE_URL;
 
   async findByTicker(ticker: string): Promise<ExternalAssetDetails | null> {
     try {

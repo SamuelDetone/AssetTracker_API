@@ -1,6 +1,7 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 
+import { env } from '../infrastructure/config/env.js';
 import { errorHandler } from '../infrastructure/http/middlewares/errorHandler.js';
 import { requestLogger } from '../infrastructure/http/middlewares/requestLogger.js';
 import { assetRoutes } from '../infrastructure/http/routes/assetRoutes.js';
@@ -11,7 +12,7 @@ import { parseCookies } from '../infrastructure/http/middlewares/parseCookies.js
 import { openApiDocument } from './docs/openApi.js';
 
 const app = express();
-const port = process.env.PORT ?? 3333;
+const port = env.PORT;
 
 app.use(express.json());
 app.use(parseCookies);

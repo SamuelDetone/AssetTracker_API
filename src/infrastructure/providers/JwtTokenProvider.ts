@@ -4,6 +4,7 @@ import {
   AuthTokenPayload,
   ITokenProvider,
 } from '../../domain/providers/ITokenProvider.js';
+import { env } from '../config/env.js';
 
 export class JwtTokenProvider implements ITokenProvider {
   createAccessToken(payload: AuthTokenPayload): string {
@@ -29,11 +30,11 @@ export class JwtTokenProvider implements ITokenProvider {
   }
 
   private getAccessSecret(): string {
-    return process.env.JWT_ACCESS_SECRET ?? 'assettracker-access-secret';
+    return env.JWT_ACCESS_SECRET;
   }
 
   private getRefreshSecret(): string {
-    return process.env.JWT_REFRESH_SECRET ?? 'assettracker-refresh-secret';
+    return env.JWT_REFRESH_SECRET;
   }
 
   private toPayload(decoded: string | object): AuthTokenPayload {

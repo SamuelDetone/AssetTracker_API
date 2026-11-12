@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { AuthenticateInvestorUseCase } from '../../../application/use-cases/AuthenticateInvestorUseCase.js';
 import { RefreshInvestorSessionUseCase } from '../../../application/use-cases/RefreshInvestorSessionUseCase.js';
 import { AppError } from '../../../domain/errors/AppError.js';
+import { env } from '../../config/env.js';
 
 export class AuthController {
   constructor(
@@ -49,7 +50,7 @@ export class AuthController {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: env.NODE_ENV === 'production',
     });
   }
 }
