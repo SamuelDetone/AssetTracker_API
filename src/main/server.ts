@@ -12,6 +12,7 @@ import {
   apiRateLimiter,
   authRateLimiter,
 } from '../infrastructure/http/middlewares/rateLimiters.js';
+import { sanitizeRequest } from '../infrastructure/http/middlewares/sanitizeRequest.js';
 import { assetRoutes } from '../infrastructure/http/routes/assetRoutes.js';
 import { authRoutes } from '../infrastructure/http/routes/authRoutes.js';
 import { investorRoutes } from '../infrastructure/http/routes/investorRoutes.js';
@@ -25,8 +26,10 @@ const port = env.PORT;
 app.use(helmet(helmetOptions));
 app.use(cors(corsOptions));
 app.use('/api/v1', apiRateLimiter);
-app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(parseCookies);
+app.use(sanitizeRequest);
 app.use(requestLogger);
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openApiDocument));

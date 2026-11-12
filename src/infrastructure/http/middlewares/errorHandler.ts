@@ -4,12 +4,34 @@ import { ZodError } from 'zod';
 import { AppError } from '../../../domain/errors/AppError.js';
 import { mapPrismaError } from '../../database/prisma/prismaErrorMapper.js';
 
+type BodyParserError = Error & {
+  type?: string;
+};
+
 export function errorHandler(
   error: Error,
   _request: Request,
   response: Response,
   _next: NextFunction,
 ): Response {
+  const bodyParserError = error as BodyParserError;
+
+  if (bodyParserError.type === 'entity.too.large') {
+    return response.status(413).json({
+      status: 'error',
+      statusCode: 413,
+      message: 'Payload excede o limite permitido de 10kb.',
+    });
+  }
+
+  if (bodyParserError.type === 'entity.parse.failed') {
+    return response.status(400).json({
+      status: 'error',
+      statusCode: 400,
+      message: 'JSON invalido.',
+    });
+  }
+
   if (error instanceof ZodError) {
     return response.status(400).json({
       status: 'error',
