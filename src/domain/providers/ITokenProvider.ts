@@ -10,4 +10,6 @@ export interface ITokenProvider {
   createRefreshToken(payload: AuthTokenPayload): string;
   verifyAccessToken(token: string): AuthTokenPayload;
   verifyRefreshToken(token: string): AuthTokenPayload;
+  getAccessTokenExpiresAt(token: string): Date;
+  getRefreshTokenExpiresAt(token: string): Date;
 }

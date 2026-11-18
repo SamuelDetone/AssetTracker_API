@@ -3,6 +3,7 @@ import { AppError } from '../../domain/errors/AppError.js';
 import { IHashProvider } from '../../domain/providers/IHashProvider.js';
 import { ITokenProvider } from '../../domain/providers/ITokenProvider.js';
 import { IInvestorRepository } from '../../domain/repositories/IInvestorRepository.js';
+import { ITokenRepository } from '../../domain/repositories/ITokenRepository.js';
 
 type AuthenticateInvestorInput = {
   email: string;
@@ -20,6 +21,7 @@ export class AuthenticateInvestorUseCase {
     private readonly investorRepository: IInvestorRepository,
     private readonly hashProvider: IHashProvider,
     private readonly tokenProvider: ITokenProvider,
+    private readonly tokenRepository: ITokenRepository,
   ) {}
 
   async execute(
@@ -43,11 +45,22 @@ export class AuthenticateInvestorUseCase {
     return this.createSession(investor);
   }
 
-  private createSession(investor: Investor): AuthenticationResult {
+  private async createSession(
+    investor: Investor,
+  ): Promise<AuthenticationResult> {
     const payload = {
       subject: investor.id,
       role: investor.role,
     };
+
+    const accessToken = this.tokenProvider.createAccessToken(payload);
+    const refreshToken = this.tokenProvider.createRefreshToken(payload);
+
+    await this.tokenRepository.createRefreshToken(
+      investor.id,
+      refreshToken,
+      this.tokenProvider.getRefreshTokenExpiresAt(refreshToken),
+    );
 
     return {
       investor: {
@@ -56,8 +69,8 @@ export class AuthenticateInvestorUseCase {
         email: investor.email,
         role: investor.role,
       },
-      accessToken: this.tokenProvider.createAccessToken(payload),
-      refreshToken: this.tokenProvider.createRefreshToken(payload),
+      accessToken,
+      refreshToken,
     };
   }
 }

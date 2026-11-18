@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { randomUUID } from 'node:crypto';
 
 import {
   AuthTokenPayload,
@@ -11,6 +12,7 @@ export class JwtTokenProvider implements ITokenProvider {
     return jwt.sign({ role: payload.role }, this.getAccessSecret(), {
       subject: payload.subject,
       expiresIn: '15m',
+      jwtid: randomUUID(),
     });
   }
 
@@ -18,6 +20,7 @@ export class JwtTokenProvider implements ITokenProvider {
     return jwt.sign({ role: payload.role }, this.getRefreshSecret(), {
       subject: payload.subject,
       expiresIn: '7d',
+      jwtid: randomUUID(),
     });
   }
 
@@ -27,6 +30,14 @@ export class JwtTokenProvider implements ITokenProvider {
 
   verifyRefreshToken(token: string): AuthTokenPayload {
     return this.toPayload(jwt.verify(token, this.getRefreshSecret()));
+  }
+
+  getAccessTokenExpiresAt(token: string): Date {
+    return this.getTokenExpiresAt(token);
+  }
+
+  getRefreshTokenExpiresAt(token: string): Date {
+    return this.getTokenExpiresAt(token);
   }
 
   private getAccessSecret(): string {
@@ -54,5 +65,19 @@ export class JwtTokenProvider implements ITokenProvider {
       subject: String(decoded.sub),
       role: decoded.role,
     };
+  }
+
+  private getTokenExpiresAt(token: string): Date {
+    const decoded = jwt.decode(token);
+
+    if (
+      !decoded ||
+      typeof decoded === 'string' ||
+      typeof decoded.exp !== 'number'
+    ) {
+      throw new Error('Token without expiration date.');
+    }
+
+    return new Date(decoded.exp * 1000);
   }
 }
