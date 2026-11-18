@@ -27,7 +27,7 @@ export const openApiDocument = {
     },
     {
       name: 'Auth',
-      description: 'Login, renovacao de sessao e autorizacao por papel.',
+      description: 'Login, ciclo de vida de sessao e autorizacao por papel.',
     },
   ],
   paths: {
@@ -65,7 +65,7 @@ export const openApiDocument = {
         tags: ['Auth'],
         summary: 'Renova a sessao usando o refresh token em cookie',
         description:
-          'Le o cookie HttpOnly refreshToken, gera um novo access token e substitui o cookie de refresh.',
+          'Le o cookie HttpOnly refreshToken, valida a sessao persistida, invalida o token usado e envia um novo par de tokens.',
         responses: {
           '200': {
             description: 'Sessao renovada.',
@@ -74,6 +74,47 @@ export const openApiDocument = {
                 schema: { $ref: '#/components/schemas/AuthenticationResponse' },
               },
             },
+          },
+          '401': { $ref: '#/components/responses/Unauthorized' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
+        },
+      },
+    },
+    '/api/v1/auth/me': {
+      get: {
+        tags: ['Auth'],
+        summary: 'Consulta o perfil do investidor autenticado',
+        description: 'Requer um access token JWT no cabecalho Authorization.',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          '200': {
+            description: 'Perfil do investidor autenticado, sem senha.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    investor: { $ref: '#/components/schemas/Investor' },
+                  },
+                },
+              },
+            },
+          },
+          '401': { $ref: '#/components/responses/Unauthorized' },
+          '429': { $ref: '#/components/responses/TooManyRequests' },
+        },
+      },
+    },
+    '/api/v1/auth/logout': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Encerra a sessao atual do investidor',
+        description:
+          'Invalida o access token, remove os refresh tokens do investidor e limpa o cookie HttpOnly.',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          '204': {
+            description: 'Sessao encerrada com sucesso.',
           },
           '401': { $ref: '#/components/responses/Unauthorized' },
           '429': { $ref: '#/components/responses/TooManyRequests' },
