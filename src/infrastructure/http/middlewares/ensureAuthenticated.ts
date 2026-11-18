@@ -1,37 +1,46 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { AppError } from '../../../domain/errors/AppError.js';
-import { JwtTokenProvider } from '../../providers/JwtTokenProvider.js';
-
-const tokenProvider = new JwtTokenProvider();
+import { ITokenProvider } from '../../../domain/providers/ITokenProvider.js';
+import { ITokenRepository } from '../../../domain/repositories/ITokenRepository.js';
 
 export function ensureAuthenticated(
-  request: Request,
-  _response: Response,
-  next: NextFunction,
-): void {
-  const authorization = request.headers.authorization;
+  tokenProvider: ITokenProvider,
+  tokenRepository: ITokenRepository,
+) {
+  return async (
+    request: Request,
+    _response: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    const authorization = request.headers.authorization;
 
-  if (!authorization) {
-    throw new AppError('Token JWT nao fornecido.', 401);
-  }
+    if (!authorization) {
+      throw new AppError('Token JWT nao fornecido.', 401);
+    }
 
-  const [scheme, token] = authorization.split(' ');
+    const [scheme, token] = authorization.split(' ');
 
-  if (scheme !== 'Bearer' || !token) {
-    throw new AppError('Formato de token JWT invalido.', 401);
-  }
+    if (scheme !== 'Bearer' || !token) {
+      throw new AppError('Formato de token JWT invalido.', 401);
+    }
 
-  try {
-    const payload = tokenProvider.verifyAccessToken(token);
+    if (await tokenRepository.isAccessTokenInvalidated(token)) {
+      throw new AppError('Sessao encerrada. Faca login novamente.', 401);
+    }
 
-    request.user = {
-      id: payload.subject,
-      role: payload.role,
-    };
-  } catch {
-    throw new AppError('Token JWT invalido ou expirado.', 401);
-  }
+    try {
+      const payload = tokenProvider.verifyAccessToken(token);
 
-  next();
+      request.user = {
+        id: payload.subject,
+        role: payload.role,
+      };
+      request.accessToken = token;
+    } catch {
+      throw new AppError('Token JWT invalido ou expirado.', 401);
+    }
+
+    next();
+  };
 }

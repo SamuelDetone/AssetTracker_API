@@ -1,4 +1,6 @@
 import { AuthenticateInvestorUseCase } from '../../application/use-cases/AuthenticateInvestorUseCase.js';
+import { GetCurrentInvestorUseCase } from '../../application/use-cases/GetCurrentInvestorUseCase.js';
+import { LogoutInvestorUseCase } from '../../application/use-cases/LogoutInvestorUseCase.js';
 import { RefreshInvestorSessionUseCase } from '../../application/use-cases/RefreshInvestorSessionUseCase.js';
 import { PrismaInvestorRepository } from '../../infrastructure/database/prisma/PrismaInvestorRepository.js';
 import { PrismaTokenRepository } from '../../infrastructure/database/prisma/PrismaTokenRepository.js';
@@ -24,5 +26,7 @@ export function makeAuthController(): AuthController {
       tokenProvider,
       tokenRepository,
     ),
+    new GetCurrentInvestorUseCase(investorRepository),
+    new LogoutInvestorUseCase(tokenProvider, tokenRepository),
   );
 }

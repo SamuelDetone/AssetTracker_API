@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
+import { makeEnsureAuthenticated } from '../../../main/factories/makeEnsureAuthenticated.js';
 import { makeInvestorController } from '../../../main/factories/makeInvestorController.js';
-import { ensureAuthenticated } from '../middlewares/ensureAuthenticated.js';
 import { ensureRole } from '../middlewares/ensureRole.js';
 import { validateRequest } from '../middlewares/validateRequest.js';
 import {
@@ -13,6 +13,7 @@ import {
 
 const investorRoutes = Router();
 const investorController = makeInvestorController();
+const ensureAuthenticated = makeEnsureAuthenticated();
 
 investorRoutes.post(
   '/investors',

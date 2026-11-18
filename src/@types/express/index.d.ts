@@ -8,6 +8,7 @@ declare global {
         id: string;
         role: InvestorRole;
       };
+      accessToken?: string;
     }
   }
 }
