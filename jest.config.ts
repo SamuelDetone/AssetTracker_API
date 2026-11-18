@@ -5,8 +5,22 @@ const config: Config = {
   testEnvironment: 'node',
   clearMocks: true,
   extensionsToTreatAsEsm: ['.ts'],
+  transform: {
+    '^.+\\.ts$': [
+      'ts-jest',
+      {
+        tsconfig: '<rootDir>/tsconfig.test.json',
+        useESM: true,
+      },
+    ],
+  },
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
+    '^@domain/(.*)\\.js$': '<rootDir>/src/domain/$1',
+    '^@application/(.*)\\.js$': '<rootDir>/src/application/$1',
+    '^@infrastructure/(.*)\\.js$': '<rootDir>/src/infrastructure/$1',
+    '^@main/(.*)\\.js$': '<rootDir>/src/main/$1',
+    '^@tests/(.*)\\.js$': '<rootDir>/tests/$1',
     '^@domain/(.*)$': '<rootDir>/src/domain/$1',
     '^@application/(.*)$': '<rootDir>/src/application/$1',
     '^@infrastructure/(.*)$': '<rootDir>/src/infrastructure/$1',
