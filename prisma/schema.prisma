@@ -13,15 +13,45 @@ enum InvestorRole {
 }
 
 model Investor {
-  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String    @db.VarChar(150)
-  email     String    @unique @db.VarChar(255)
-  password  String
-  role      InvestorRole @default(USER)
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  holdings  Holding[]
+  id                      String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                    String                   @db.VarChar(150)
+  email                   String                   @unique @db.VarChar(255)
+  password                String
+  role                    InvestorRole             @default(USER)
+  createdAt               DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  holdings                Holding[]
+  refreshTokens           RefreshToken[]
+  invalidatedAccessTokens InvalidatedAccessToken[]
 
   @@map("investors")
+}
+
+model RefreshToken {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tokenHash  String   @unique @map("token_hash")
+  investorId String   @map("investor_id") @db.Uuid
+  expiresAt  DateTime @map("expires_at") @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  investor Investor @relation(fields: [investorId], references: [id], onDelete: Cascade)
+
+  @@index([investorId], map: "idx_refresh_tokens_investor_id")
+  @@index([expiresAt], map: "idx_refresh_tokens_expires_at")
+  @@map("refresh_tokens")
+}
+
+model InvalidatedAccessToken {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tokenHash  String   @unique @map("token_hash")
+  investorId String   @map("investor_id") @db.Uuid
+  expiresAt  DateTime @map("expires_at") @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  investor Investor @relation(fields: [investorId], references: [id], onDelete: Cascade)
+
+  @@index([investorId], map: "idx_invalidated_access_tokens_investor_id")
+  @@index([expiresAt], map: "idx_invalidated_access_tokens_expires_at")
+  @@map("invalidated_access_tokens")
 }
 
 model Asset {
