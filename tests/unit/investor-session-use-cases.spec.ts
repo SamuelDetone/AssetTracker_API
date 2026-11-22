@@ -150,6 +150,31 @@ describe('casos de uso de investidor e sessao', () => {
     });
   });
 
+  it('rejeita e expurga refresh token expirado', async () => {
+    const refreshToken = 'refresh-token-expirado';
+    tokenProvider.registerRefreshToken(refreshToken, {
+      subject: investorId,
+      role: 'USER',
+    });
+    await tokenRepository.createRefreshToken(
+      investorId,
+      refreshToken,
+      new Date(Date.now() - 1_000),
+    );
+    const sut = new RefreshInvestorSessionUseCase(
+      investorRepository,
+      tokenProvider,
+      tokenRepository,
+    );
+
+    await expect(sut.execute(refreshToken)).rejects.toMatchObject({
+      statusCode: 401,
+    });
+    await expect(
+      tokenRepository.findRefreshToken(refreshToken),
+    ).resolves.toBeNull();
+  });
+
   it('encerra a sessao, invalida o access token e trata token invalido', async () => {
     const refreshToken = 'refresh-token-atual';
     await tokenRepository.createRefreshToken(
