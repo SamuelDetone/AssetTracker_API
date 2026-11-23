@@ -21,11 +21,7 @@ export function makeAuthController(): AuthController {
       tokenProvider,
       tokenRepository,
     ),
-    new RefreshInvestorSessionUseCase(
-      investorRepository,
-      tokenProvider,
-      tokenRepository,
-    ),
+    new RefreshInvestorSessionUseCase(investorRepository, tokenProvider, tokenRepository),
     new GetCurrentInvestorUseCase(investorRepository),
     new LogoutInvestorUseCase(tokenProvider, tokenRepository),
   );

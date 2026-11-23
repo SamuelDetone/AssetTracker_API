@@ -1,8 +1,4 @@
-import {
-  Asset,
-  CreateAssetInput,
-  UpdateAssetInput,
-} from '../entities/Asset.js';
+import { Asset, CreateAssetInput, UpdateAssetInput } from '../entities/Asset.js';
 
 export type ListAssetFilters = {
   type?: string;

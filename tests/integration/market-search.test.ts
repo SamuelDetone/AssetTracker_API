@@ -9,9 +9,7 @@ describe('consulta de mercado sem dependencia externa', () => {
   });
 
   it('retorna um ativo do catalogo de mercado offline', async () => {
-    const response = await request(app)
-      .get('/api/v1/market/search?ticker=mchi')
-      .expect(200);
+    const response = await request(app).get('/api/v1/market/search?ticker=mchi').expect(200);
 
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -24,9 +22,7 @@ describe('consulta de mercado sem dependencia externa', () => {
   });
 
   it('retorna 404 para ticker ausente do catalogo offline', async () => {
-    const response = await request(app)
-      .get('/api/v1/market/search?ticker=UNKNOWN')
-      .expect(404);
+    const response = await request(app).get('/api/v1/market/search?ticker=UNKNOWN').expect(404);
 
     expect(response.body).toEqual(
       expect.objectContaining({

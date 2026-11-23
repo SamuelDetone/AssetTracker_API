@@ -1,8 +1,5 @@
 import { Asset } from '../../domain/entities/Asset.js';
-import {
-  IAssetRepository,
-  ListAssetFilters,
-} from '../../domain/repositories/IAssetRepository.js';
+import { IAssetRepository, ListAssetFilters } from '../../domain/repositories/IAssetRepository.js';
 
 export class ListAssetsUseCase {
   constructor(private readonly assetRepository: IAssetRepository) {}

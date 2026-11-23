@@ -60,11 +60,7 @@ function sanitizeRecordInPlace(record: SanitizableRecord): void {
   Object.assign(record, sanitized);
 }
 
-export function sanitizeRequest(
-  request: Request,
-  _response: Response,
-  next: NextFunction,
-): void {
+export function sanitizeRequest(request: Request, _response: Response, next: NextFunction): void {
   if (isRecord(request.body)) {
     request.body = deepSanitize(request.body);
   }

@@ -1,7 +1,4 @@
-import {
-  AuthTokenPayload,
-  ITokenProvider,
-} from '@domain/providers/ITokenProvider.js';
+import { AuthTokenPayload, ITokenProvider } from '@domain/providers/ITokenProvider.js';
 
 export class FakeTokenProvider implements ITokenProvider {
   private accessTokenSequence = 0;

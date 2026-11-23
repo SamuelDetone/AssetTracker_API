@@ -1,8 +1,5 @@
 import { Asset } from '../../../domain/entities/Asset.js';
-import {
-  CreateHoldingInput,
-  Holding,
-} from '../../../domain/entities/Holding.js';
+import { CreateHoldingInput, Holding } from '../../../domain/entities/Holding.js';
 import { IHoldingRepository } from '../../../domain/repositories/IHoldingRepository.js';
 import { prisma } from './client.js';
 

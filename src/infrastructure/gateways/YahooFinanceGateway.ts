@@ -28,15 +28,12 @@ export class YahooFinanceGateway implements IMarketDataGateway {
 
   async findByTicker(ticker: string): Promise<ExternalAssetDetails | null> {
     try {
-      const response = await axios.get<YahooQuoteResponse>(
-        `${this.baseUrl}/quote`,
-        {
-          params: {
-            symbols: ticker,
-          },
-          timeout: 3000,
+      const response = await axios.get<YahooQuoteResponse>(`${this.baseUrl}/quote`, {
+        params: {
+          symbols: ticker,
         },
-      );
+        timeout: 3000,
+      });
 
       const quote = response.data.quoteResponse?.result?.[0];
 

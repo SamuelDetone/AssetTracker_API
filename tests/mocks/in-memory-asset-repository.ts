@@ -1,12 +1,5 @@
-import {
-  Asset,
-  CreateAssetInput,
-  UpdateAssetInput,
-} from '@domain/entities/Asset.js';
-import {
-  IAssetRepository,
-  ListAssetFilters,
-} from '@domain/repositories/IAssetRepository.js';
+import { Asset, CreateAssetInput, UpdateAssetInput } from '@domain/entities/Asset.js';
+import { IAssetRepository, ListAssetFilters } from '@domain/repositories/IAssetRepository.js';
 
 export class InMemoryAssetRepository implements IAssetRepository {
   public readonly assets: Asset[] = [];
@@ -46,9 +39,7 @@ export class InMemoryAssetRepository implements IAssetRepository {
   }
 
   async delete(ticker: string): Promise<boolean> {
-    const assetIndex = this.assets.findIndex(
-      (asset) => asset.ticker === ticker,
-    );
+    const assetIndex = this.assets.findIndex((asset) => asset.ticker === ticker);
 
     if (assetIndex === -1) {
       return false;

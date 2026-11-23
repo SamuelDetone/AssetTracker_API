@@ -1,8 +1,4 @@
-import {
-  Asset,
-  CreateAssetInput,
-  UpdateAssetInput,
-} from '../../../domain/entities/Asset.js';
+import { Asset, CreateAssetInput, UpdateAssetInput } from '../../../domain/entities/Asset.js';
 import {
   IAssetRepository,
   ListAssetFilters,

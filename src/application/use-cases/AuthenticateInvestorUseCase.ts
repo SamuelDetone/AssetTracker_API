@@ -24,19 +24,14 @@ export class AuthenticateInvestorUseCase {
     private readonly tokenRepository: ITokenRepository,
   ) {}
 
-  async execute(
-    data: AuthenticateInvestorInput,
-  ): Promise<AuthenticationResult> {
+  async execute(data: AuthenticateInvestorInput): Promise<AuthenticationResult> {
     const investor = await this.investorRepository.findByEmail(data.email);
 
     if (!investor) {
       throw new AppError('Credenciais invalidas.', 401);
     }
 
-    const passwordMatches = await this.hashProvider.compare(
-      data.password,
-      investor.password,
-    );
+    const passwordMatches = await this.hashProvider.compare(data.password, investor.password);
 
     if (!passwordMatches) {
       throw new AppError('Credenciais invalidas.', 401);
@@ -45,9 +40,7 @@ export class AuthenticateInvestorUseCase {
     return this.createSession(investor);
   }
 
-  private async createSession(
-    investor: Investor,
-  ): Promise<AuthenticationResult> {
+  private async createSession(investor: Investor): Promise<AuthenticationResult> {
     const payload = {
       subject: investor.id,
       role: investor.role,

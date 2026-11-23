@@ -17,11 +17,7 @@ export class LogoutInvestorUseCase {
       throw new AppError('Token JWT invalido ou expirado.', 401);
     }
 
-    await this.tokenRepository.invalidateAccessToken(
-      investorId,
-      accessToken,
-      expiresAt,
-    );
+    await this.tokenRepository.invalidateAccessToken(investorId, accessToken, expiresAt);
     await this.tokenRepository.deleteRefreshTokensByInvestorId(investorId);
   }
 }

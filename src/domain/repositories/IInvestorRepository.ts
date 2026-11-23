@@ -1,8 +1,4 @@
-import {
-  CreateInvestorInput,
-  Investor,
-  InvestorRole,
-} from '../entities/Investor.js';
+import { CreateInvestorInput, Investor, InvestorRole } from '../entities/Investor.js';
 
 export interface IInvestorRepository {
   create(data: CreateInvestorInput): Promise<Investor>;

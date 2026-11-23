@@ -48,9 +48,9 @@ describe('casos de uso de investidor e sessao', () => {
         refreshToken: 'refresh-token-1',
       }),
     );
-    await expect(
-      tokenRepository.findRefreshToken(session.refreshToken),
-    ).resolves.toEqual(expect.objectContaining({ investorId }));
+    await expect(tokenRepository.findRefreshToken(session.refreshToken)).resolves.toEqual(
+      expect.objectContaining({ investorId }),
+    );
   });
 
   it('rejeita credenciais quando o investidor nao existe ou a senha esta errada', async () => {
@@ -107,9 +107,7 @@ describe('casos de uso de investidor e sessao', () => {
     const session = await sut.execute(refreshToken);
 
     expect(session.refreshToken).toBe('refresh-token-1');
-    await expect(
-      tokenRepository.findRefreshToken(refreshToken),
-    ).resolves.toBeNull();
+    await expect(tokenRepository.findRefreshToken(refreshToken)).resolves.toBeNull();
     await expect(sut.execute(refreshToken)).rejects.toMatchObject({
       statusCode: 401,
     });
@@ -170,9 +168,7 @@ describe('casos de uso de investidor e sessao', () => {
     await expect(sut.execute(refreshToken)).rejects.toMatchObject({
       statusCode: 401,
     });
-    await expect(
-      tokenRepository.findRefreshToken(refreshToken),
-    ).resolves.toBeNull();
+    await expect(tokenRepository.findRefreshToken(refreshToken)).resolves.toBeNull();
   });
 
   it('encerra a sessao, invalida o access token e trata token invalido', async () => {
@@ -186,12 +182,10 @@ describe('casos de uso de investidor e sessao', () => {
 
     await sut.execute(investorId, 'access-token-atual');
 
-    await expect(
-      tokenRepository.isAccessTokenInvalidated('access-token-atual'),
-    ).resolves.toBe(true);
-    await expect(
-      tokenRepository.findRefreshToken(refreshToken),
-    ).resolves.toBeNull();
+    await expect(tokenRepository.isAccessTokenInvalidated('access-token-atual')).resolves.toBe(
+      true,
+    );
+    await expect(tokenRepository.findRefreshToken(refreshToken)).resolves.toBeNull();
 
     tokenProvider.failAccessTokenExpiration = true;
     await expect(sut.execute(investorId, 'invalid')).rejects.toMatchObject({

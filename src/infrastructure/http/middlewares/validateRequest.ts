@@ -16,9 +16,7 @@ export function validateRequest(schemas: RequestSchemas) {
     }
 
     if (schemas.params) {
-      const parsedParams = schemas.params.parse(
-        request.params,
-      ) as ParamsDictionary;
+      const parsedParams = schemas.params.parse(request.params) as ParamsDictionary;
 
       Object.assign(request.params, parsedParams);
     }

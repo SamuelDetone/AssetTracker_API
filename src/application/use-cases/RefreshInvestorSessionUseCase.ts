@@ -20,23 +20,16 @@ export class RefreshInvestorSessionUseCase {
       throw new AppError('Refresh token invalido ou expirado.', 401);
     }
 
-    const storedRefreshToken =
-      await this.tokenRepository.findRefreshToken(refreshToken);
+    const storedRefreshToken = await this.tokenRepository.findRefreshToken(refreshToken);
 
-    if (
-      !storedRefreshToken ||
-      storedRefreshToken.investorId !== payload.subject
-    ) {
+    if (!storedRefreshToken || storedRefreshToken.investorId !== payload.subject) {
       throw new AppError('Refresh token invalido ou ja utilizado.', 401);
     }
 
     const investor = await this.investorRepository.findById(payload.subject);
 
     if (!investor) {
-      throw new AppError(
-        'Conta associada ao refresh token nao encontrada.',
-        401,
-      );
+      throw new AppError('Conta associada ao refresh token nao encontrada.', 401);
     }
 
     const tokenPayload = {
@@ -45,8 +38,7 @@ export class RefreshInvestorSessionUseCase {
     };
 
     const accessToken = this.tokenProvider.createAccessToken(tokenPayload);
-    const nextRefreshToken =
-      this.tokenProvider.createRefreshToken(tokenPayload);
+    const nextRefreshToken = this.tokenProvider.createRefreshToken(tokenPayload);
 
     await this.tokenRepository.deleteRefreshToken(refreshToken);
     await this.tokenRepository.createRefreshToken(

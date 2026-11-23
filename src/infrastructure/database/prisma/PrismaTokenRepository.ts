@@ -7,11 +7,7 @@ import {
 import { prisma } from './client.js';
 
 export class PrismaTokenRepository implements ITokenRepository {
-  async createRefreshToken(
-    investorId: string,
-    token: string,
-    expiresAt: Date,
-  ): Promise<void> {
+  async createRefreshToken(investorId: string, token: string, expiresAt: Date): Promise<void> {
     await this.deleteExpiredTokens();
 
     await prisma.refreshToken.create({
@@ -58,11 +54,7 @@ export class PrismaTokenRepository implements ITokenRepository {
     });
   }
 
-  async invalidateAccessToken(
-    investorId: string,
-    token: string,
-    expiresAt: Date,
-  ): Promise<void> {
+  async invalidateAccessToken(investorId: string, token: string, expiresAt: Date): Promise<void> {
     await this.deleteExpiredTokens();
 
     const tokenHash = this.hashToken(token);

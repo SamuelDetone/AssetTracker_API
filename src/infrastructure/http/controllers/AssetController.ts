@@ -17,16 +17,11 @@ export class AssetController {
   ) {}
 
   list = async (request: Request, response: Response): Promise<Response> => {
-    const type =
-      typeof request.query.type === 'string' ? request.query.type : undefined;
+    const type = typeof request.query.type === 'string' ? request.query.type : undefined;
     const currency =
-      typeof request.query.currency === 'string'
-        ? request.query.currency
-        : undefined;
+      typeof request.query.currency === 'string' ? request.query.currency : undefined;
     const exchange =
-      typeof request.query.exchange === 'string'
-        ? request.query.exchange
-        : undefined;
+      typeof request.query.exchange === 'string' ? request.query.exchange : undefined;
 
     const assets = await this.listAssetsUseCase.execute({
       type,
@@ -37,10 +32,7 @@ export class AssetController {
     return response.json(assets);
   };
 
-  findByTicker = async (
-    request: Request,
-    response: Response,
-  ): Promise<Response> => {
+  findByTicker = async (request: Request, response: Response): Promise<Response> => {
     const ticker = this.getTickerFromParams(request);
     const asset = await this.getAssetByTickerUseCase.execute(ticker);
 

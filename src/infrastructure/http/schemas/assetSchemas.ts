@@ -1,12 +1,6 @@
 import { z } from 'zod';
 
-export const assetTypeSchema = z.enum([
-  'stock',
-  'etf',
-  'crypto',
-  'fund',
-  'reit',
-]);
+export const assetTypeSchema = z.enum(['stock', 'etf', 'crypto', 'fund', 'reit']);
 
 export const createAssetSchema = z.object({
   ticker: z

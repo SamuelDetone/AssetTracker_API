@@ -1,10 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-import {
-  CreateInvestorInput,
-  Investor,
-  InvestorRole,
-} from '@domain/entities/Investor.js';
+import { CreateInvestorInput, Investor, InvestorRole } from '@domain/entities/Investor.js';
 import { IInvestorRepository } from '@domain/repositories/IInvestorRepository.js';
 
 export class InMemoryInvestorRepository implements IInvestorRepository {
@@ -29,11 +25,7 @@ export class InMemoryInvestorRepository implements IInvestorRepository {
   }
 
   async findByEmail(email: string): Promise<Investor | null> {
-    return (
-      this.investors.find(
-        (investor) => investor.email === email.toLowerCase(),
-      ) ?? null
-    );
+    return this.investors.find((investor) => investor.email === email.toLowerCase()) ?? null;
   }
 
   async updateRole(id: string, role: InvestorRole): Promise<Investor | null> {

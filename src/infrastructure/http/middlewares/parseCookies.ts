@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-export function parseCookies(
-  request: Request,
-  _response: Response,
-  next: NextFunction,
-): void {
+export function parseCookies(request: Request, _response: Response, next: NextFunction): void {
   const rawCookies = request.headers.cookie;
 
   request.cookies = {};

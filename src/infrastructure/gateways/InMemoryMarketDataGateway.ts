@@ -35,10 +35,6 @@ export class InMemoryMarketDataGateway implements IMarketDataGateway {
   ];
 
   async findByTicker(ticker: string): Promise<ExternalAssetDetails | null> {
-    return (
-      this.assets.find(
-        (asset) => asset.ticker.toLowerCase() === ticker.toLowerCase(),
-      ) ?? null
-    );
+    return this.assets.find((asset) => asset.ticker.toLowerCase() === ticker.toLowerCase()) ?? null;
   }
 }

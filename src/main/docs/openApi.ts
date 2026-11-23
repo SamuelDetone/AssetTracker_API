@@ -45,8 +45,7 @@ export const openApiDocument = {
         },
         responses: {
           '200': {
-            description:
-              'Login concluido e refresh token salvo em cookie HttpOnly.',
+            description: 'Login concluido e refresh token salvo em cookie HttpOnly.',
             content: {
               'application/json': {
                 schema: { $ref: '#/components/schemas/AuthenticationResponse' },
@@ -474,8 +473,7 @@ export const openApiDocument = {
         },
       },
       Forbidden: {
-        description:
-          'O usuario autenticado nao tem permissao para este recurso.',
+        description: 'O usuario autenticado nao tem permissao para este recurso.',
         content: {
           'application/json': {
             schema: { $ref: '#/components/schemas/ErrorResponse' },
@@ -526,14 +524,7 @@ export const openApiDocument = {
       },
       CreateAsset: {
         type: 'object',
-        required: [
-          'ticker',
-          'name',
-          'type',
-          'currency',
-          'quantity',
-          'averagePrice',
-        ],
+        required: ['ticker', 'name', 'type', 'currency', 'quantity', 'averagePrice'],
         properties: {
           ticker: { type: 'string', example: 'MCHI' },
           name: { type: 'string', example: 'iShares MSCI China ETF' },

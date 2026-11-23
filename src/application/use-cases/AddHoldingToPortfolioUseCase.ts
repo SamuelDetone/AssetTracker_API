@@ -26,8 +26,9 @@ export class AddHoldingToPortfolioUseCase {
       throw new AppError('Investor not found.', 404);
     }
 
-    const activeHoldingsCount =
-      await this.holdingRepository.countActiveByInvestorId(data.investorId);
+    const activeHoldingsCount = await this.holdingRepository.countActiveByInvestorId(
+      data.investorId,
+    );
 
     if (activeHoldingsCount >= 6) {
       throw new AppError(
@@ -39,9 +40,7 @@ export class AddHoldingToPortfolioUseCase {
     let asset = await this.assetRepository.findByTicker(data.ticker);
 
     if (!asset) {
-      const externalAsset = await this.marketDataGateway.findByTicker(
-        data.ticker,
-      );
+      const externalAsset = await this.marketDataGateway.findByTicker(data.ticker);
 
       if (!externalAsset) {
         throw new AppError('Asset not found in market data provider.', 404);

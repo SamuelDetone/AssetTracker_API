@@ -10,9 +10,6 @@ export type Investor = {
 
 export type InvestorProfile = Omit<Investor, 'password'>;
 
-export type CreateInvestorInput = Pick<
-  Investor,
-  'name' | 'email' | 'password'
-> & {
+export type CreateInvestorInput = Pick<Investor, 'name' | 'email' | 'password'> & {
   id?: string;
 };

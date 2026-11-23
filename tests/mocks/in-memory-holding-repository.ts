@@ -21,14 +21,11 @@ export class InMemoryHoldingRepository implements IHoldingRepository {
   }
 
   async countActiveByInvestorId(investorId: string): Promise<number> {
-    return this.holdings.filter(
-      (holding) => holding.investorId === investorId && holding.active,
-    ).length;
+    return this.holdings.filter((holding) => holding.investorId === investorId && holding.active)
+      .length;
   }
 
   async listActiveByInvestorId(investorId: string): Promise<Holding[]> {
-    return this.holdings.filter(
-      (holding) => holding.investorId === investorId && holding.active,
-    );
+    return this.holdings.filter((holding) => holding.investorId === investorId && holding.active);
   }
 }

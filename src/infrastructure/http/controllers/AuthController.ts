@@ -16,9 +16,7 @@ export class AuthController {
   ) {}
 
   login = async (request: Request, response: Response): Promise<Response> => {
-    const session = await this.authenticateInvestorUseCase.execute(
-      request.body,
-    );
+    const session = await this.authenticateInvestorUseCase.execute(request.body);
 
     this.setRefreshTokenCookie(response, session.refreshToken);
 
@@ -35,8 +33,7 @@ export class AuthController {
       throw new AppError('Refresh token nao fornecido.', 401);
     }
 
-    const session =
-      await this.refreshInvestorSessionUseCase.execute(refreshToken);
+    const session = await this.refreshInvestorSessionUseCase.execute(refreshToken);
 
     this.setRefreshTokenCookie(response, session.refreshToken);
 
@@ -51,9 +48,7 @@ export class AuthController {
       throw new AppError('Usuario nao autenticado.', 401);
     }
 
-    const investor = await this.getCurrentInvestorUseCase.execute(
-      request.user.id,
-    );
+    const investor = await this.getCurrentInvestorUseCase.execute(request.user.id);
 
     return response.json({ investor });
   };
@@ -63,20 +58,14 @@ export class AuthController {
       throw new AppError('Usuario nao autenticado.', 401);
     }
 
-    await this.logoutInvestorUseCase.execute(
-      request.user.id,
-      request.accessToken,
-    );
+    await this.logoutInvestorUseCase.execute(request.user.id, request.accessToken);
 
     this.clearRefreshTokenCookie(response);
 
     return response.status(204).send();
   };
 
-  private setRefreshTokenCookie(
-    response: Response,
-    refreshToken: string,
-  ): void {
+  private setRefreshTokenCookie(response: Response, refreshToken: string): void {
     response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,

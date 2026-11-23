@@ -6,9 +6,6 @@ import { YahooFinanceGateway } from '../../infrastructure/gateways/YahooFinanceG
 
 export function makeMarketDataGateway(): IMarketDataGateway {
   return env.USE_EXTERNAL_MARKET_API
-    ? new FallbackMarketDataGateway(
-        new YahooFinanceGateway(),
-        new InMemoryMarketDataGateway(),
-      )
+    ? new FallbackMarketDataGateway(new YahooFinanceGateway(), new InMemoryMarketDataGateway())
     : new InMemoryMarketDataGateway();
 }

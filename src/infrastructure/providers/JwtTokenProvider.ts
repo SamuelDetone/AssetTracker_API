@@ -1,10 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { randomUUID } from 'node:crypto';
 
-import {
-  AuthTokenPayload,
-  ITokenProvider,
-} from '../../domain/providers/ITokenProvider.js';
+import { AuthTokenPayload, ITokenProvider } from '../../domain/providers/ITokenProvider.js';
 import { env } from '../config/env.js';
 
 export class JwtTokenProvider implements ITokenProvider {
@@ -49,11 +46,7 @@ export class JwtTokenProvider implements ITokenProvider {
   }
 
   private toPayload(decoded: string | object): AuthTokenPayload {
-    if (
-      typeof decoded === 'string' ||
-      !('sub' in decoded) ||
-      !('role' in decoded)
-    ) {
+    if (typeof decoded === 'string' || !('sub' in decoded) || !('role' in decoded)) {
       throw new Error('Invalid token payload.');
     }
 
@@ -70,11 +63,7 @@ export class JwtTokenProvider implements ITokenProvider {
   private getTokenExpiresAt(token: string): Date {
     const decoded = jwt.decode(token);
 
-    if (
-      !decoded ||
-      typeof decoded === 'string' ||
-      typeof decoded.exp !== 'number'
-    ) {
+    if (!decoded || typeof decoded === 'string' || typeof decoded.exp !== 'number') {
       throw new Error('Token without expiration date.');
     }
 

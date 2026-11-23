@@ -1,8 +1,4 @@
-import {
-  Asset,
-  CreateAssetInput,
-  UpdateAssetInput,
-} from '../../../domain/entities/Asset.js';
+import { Asset, CreateAssetInput, UpdateAssetInput } from '../../../domain/entities/Asset.js';
 import {
   IAssetRepository,
   ListAssetFilters,
@@ -65,11 +61,7 @@ export class InMemoryAssetRepository implements IAssetRepository {
   }
 
   async findByTicker(ticker: string): Promise<Asset | null> {
-    return (
-      this.assets.find(
-        (asset) => asset.ticker.toLowerCase() === ticker.toLowerCase(),
-      ) ?? null
-    );
+    return this.assets.find((asset) => asset.ticker.toLowerCase() === ticker.toLowerCase()) ?? null;
   }
 
   async create(data: CreateAssetInput): Promise<Asset> {

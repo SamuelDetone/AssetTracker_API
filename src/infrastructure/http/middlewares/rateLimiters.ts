@@ -28,9 +28,7 @@ export const authRateLimiter = rateLimit({
   limit: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  message: createLimitMessage(
-    'Muitas tentativas de autenticacao. Tente novamente em 5 minutos.',
-  ),
+  message: createLimitMessage('Muitas tentativas de autenticacao. Tente novamente em 5 minutos.'),
 });
 
 export async function resetRateLimiters(): Promise<void> {

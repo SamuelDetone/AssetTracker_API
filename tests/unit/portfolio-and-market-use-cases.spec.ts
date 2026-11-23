@@ -45,9 +45,7 @@ describe('casos de uso de carteira e mercado', () => {
       marketDataGateway,
     );
 
-    await expect(
-      sut.execute({ investorId, ticker: 'AAPL', quantity: 2 }),
-    ).resolves.toEqual(
+    await expect(sut.execute({ investorId, ticker: 'AAPL', quantity: 2 })).resolves.toEqual(
       expect.objectContaining({ investorId, assetTicker: 'AAPL', quantity: 2 }),
     );
   });
@@ -86,9 +84,9 @@ describe('casos de uso de carteira e mercado', () => {
     await expect(
       sut.execute({ investorId: 'missing', ticker: 'AAPL', quantity: 1 }),
     ).rejects.toMatchObject({ statusCode: 404 });
-    await expect(
-      sut.execute({ investorId, ticker: 'AAPL', quantity: 1 }),
-    ).rejects.toMatchObject({ statusCode: 404 });
+    await expect(sut.execute({ investorId, ticker: 'AAPL', quantity: 1 })).rejects.toMatchObject({
+      statusCode: 404,
+    });
 
     for (let index = 0; index < 6; index += 1) {
       await holdingRepository.create({
@@ -98,9 +96,9 @@ describe('casos de uso de carteira e mercado', () => {
       });
     }
 
-    await expect(
-      sut.execute({ investorId, ticker: 'AAPL', quantity: 1 }),
-    ).rejects.toMatchObject({ statusCode: 409 });
+    await expect(sut.execute({ investorId, ticker: 'AAPL', quantity: 1 })).rejects.toMatchObject({
+      statusCode: 409,
+    });
   });
 
   it('lista a carteira de um investidor e rejeita investidor inexistente', async () => {
@@ -109,10 +107,7 @@ describe('casos de uso de carteira e mercado', () => {
       assetTicker: 'AAPL',
       quantity: 3,
     });
-    const sut = new ListInvestorPortfolioUseCase(
-      investorRepository,
-      holdingRepository,
-    );
+    const sut = new ListInvestorPortfolioUseCase(investorRepository, holdingRepository);
 
     await expect(sut.execute(investorId)).resolves.toHaveLength(1);
     await expect(sut.execute('missing')).rejects.toMatchObject({

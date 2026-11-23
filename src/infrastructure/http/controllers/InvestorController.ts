@@ -20,10 +20,7 @@ export class InvestorController {
     return response.status(201).json(investor);
   };
 
-  addHolding = async (
-    request: Request,
-    response: Response,
-  ): Promise<Response> => {
+  addHolding = async (request: Request, response: Response): Promise<Response> => {
     const investorId = this.getInvestorIdFromParams(request);
     this.assertCanAccessInvestor(request, investorId);
     const holding = await this.addHoldingToPortfolioUseCase.execute({
@@ -35,27 +32,17 @@ export class InvestorController {
     return response.status(201).json(holding);
   };
 
-  listPortfolio = async (
-    request: Request,
-    response: Response,
-  ): Promise<Response> => {
+  listPortfolio = async (request: Request, response: Response): Promise<Response> => {
     const investorId = this.getInvestorIdFromParams(request);
     this.assertCanAccessInvestor(request, investorId);
-    const portfolio =
-      await this.listInvestorPortfolioUseCase.execute(investorId);
+    const portfolio = await this.listInvestorPortfolioUseCase.execute(investorId);
 
     return response.json(portfolio);
   };
 
-  updateRole = async (
-    request: Request,
-    response: Response,
-  ): Promise<Response> => {
+  updateRole = async (request: Request, response: Response): Promise<Response> => {
     const investorId = this.getInvestorIdFromParams(request);
-    const investor = await this.updateInvestorRoleUseCase.execute(
-      investorId,
-      request.body.role,
-    );
+    const investor = await this.updateInvestorRoleUseCase.execute(investorId, request.body.role);
 
     return response.json(investor);
   };

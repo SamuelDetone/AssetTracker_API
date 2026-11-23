@@ -3,8 +3,5 @@ import { ensureAuthenticated } from '../../infrastructure/http/middlewares/ensur
 import { JwtTokenProvider } from '../../infrastructure/providers/JwtTokenProvider.js';
 
 export function makeEnsureAuthenticated() {
-  return ensureAuthenticated(
-    new JwtTokenProvider(),
-    new PrismaTokenRepository(),
-  );
+  return ensureAuthenticated(new JwtTokenProvider(), new PrismaTokenRepository());
 }

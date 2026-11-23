@@ -40,8 +40,7 @@ export class PgAssetRepository implements IAssetRepository {
       conditions.push(`exchange = $${values.length}`);
     }
 
-    const whereClause =
-      conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
     const result = await postgresPool.query<AssetRow>(
       `SELECT ticker, name, type, currency, exchange, quantity, average_price
        FROM assets
@@ -125,10 +124,9 @@ export class PgAssetRepository implements IAssetRepository {
   }
 
   async delete(ticker: string): Promise<boolean> {
-    const result = await postgresPool.query(
-      'DELETE FROM assets WHERE LOWER(ticker) = LOWER($1)',
-      [ticker],
-    );
+    const result = await postgresPool.query('DELETE FROM assets WHERE LOWER(ticker) = LOWER($1)', [
+      ticker,
+    ]);
 
     return (result.rowCount ?? 0) > 0;
   }

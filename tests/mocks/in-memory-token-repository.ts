@@ -1,9 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-import {
-  ITokenRepository,
-  StoredRefreshToken,
-} from '@domain/repositories/ITokenRepository.js';
+import { ITokenRepository, StoredRefreshToken } from '@domain/repositories/ITokenRepository.js';
 
 type InvalidatedAccessToken = {
   investorId: string;
@@ -12,16 +9,9 @@ type InvalidatedAccessToken = {
 
 export class InMemoryTokenRepository implements ITokenRepository {
   private readonly refreshTokens = new Map<string, StoredRefreshToken>();
-  private readonly invalidatedAccessTokens = new Map<
-    string,
-    InvalidatedAccessToken
-  >();
+  private readonly invalidatedAccessTokens = new Map<string, InvalidatedAccessToken>();
 
-  async createRefreshToken(
-    investorId: string,
-    token: string,
-    expiresAt: Date,
-  ): Promise<void> {
+  async createRefreshToken(investorId: string, token: string, expiresAt: Date): Promise<void> {
     this.deleteExpiredTokens();
 
     this.refreshTokens.set(token, {
@@ -50,11 +40,7 @@ export class InMemoryTokenRepository implements ITokenRepository {
     }
   }
 
-  async invalidateAccessToken(
-    investorId: string,
-    token: string,
-    expiresAt: Date,
-  ): Promise<void> {
+  async invalidateAccessToken(investorId: string, token: string, expiresAt: Date): Promise<void> {
     this.deleteExpiredTokens();
 
     this.invalidatedAccessTokens.set(token, {

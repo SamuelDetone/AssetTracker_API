@@ -1,8 +1,4 @@
-import {
-  CreateInvestorInput,
-  Investor,
-  InvestorRole,
-} from '../../../domain/entities/Investor.js';
+import { CreateInvestorInput, Investor, InvestorRole } from '../../../domain/entities/Investor.js';
 import { IInvestorRepository } from '../../../domain/repositories/IInvestorRepository.js';
 import { postgresPool } from './connection.js';
 

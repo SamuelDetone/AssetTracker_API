@@ -12,21 +12,13 @@ import {
 const assetRoutes = Router();
 const assetController = makeAssetController();
 
-assetRoutes.get(
-  '/assets',
-  validateRequest({ query: listAssetsQuerySchema }),
-  assetController.list,
-);
+assetRoutes.get('/assets', validateRequest({ query: listAssetsQuerySchema }), assetController.list);
 assetRoutes.get(
   '/assets/:ticker',
   validateRequest({ params: assetTickerParamsSchema }),
   assetController.findByTicker,
 );
-assetRoutes.post(
-  '/assets',
-  validateRequest({ body: createAssetSchema }),
-  assetController.create,
-);
+assetRoutes.post('/assets', validateRequest({ body: createAssetSchema }), assetController.create);
 assetRoutes.put(
   '/assets/:ticker',
   validateRequest({

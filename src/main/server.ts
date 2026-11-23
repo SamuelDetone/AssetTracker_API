@@ -4,5 +4,5 @@ import { app } from './app.js';
 const port = env.PORT;
 
 app.listen(port, () => {
-  console.log(`AssetTracker API running on port ${port}`);
+  console.info(`AssetTracker API running on port ${port}`);
 });

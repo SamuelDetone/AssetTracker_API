@@ -6,9 +6,7 @@ export class CreateAssetUseCase {
   constructor(private readonly assetRepository: IAssetRepository) {}
 
   async execute(data: CreateAssetInput): Promise<Asset> {
-    const assetAlreadyExists = await this.assetRepository.findByTicker(
-      data.ticker,
-    );
+    const assetAlreadyExists = await this.assetRepository.findByTicker(data.ticker);
 
     if (assetAlreadyExists) {
       throw new AppError('Asset already exists.', 409);

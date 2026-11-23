@@ -21,10 +21,7 @@ describe('fluxo de autenticacao HTTP', () => {
   });
 
   it('cadastra, autentica, renova, encerra e bloqueia uma sessao', async () => {
-    const createResponse = await request(app)
-      .post('/api/v1/investors')
-      .send(investor)
-      .expect(201);
+    const createResponse = await request(app).post('/api/v1/investors').send(investor).expect(201);
 
     expect(createResponse.body).toEqual(
       expect.objectContaining({
@@ -61,9 +58,7 @@ describe('fluxo de autenticacao HTTP', () => {
     );
     expect(profileResponse.body.investor).not.toHaveProperty('password');
 
-    const refreshResponse = await agent
-      .post('/api/v1/auth/refresh-token')
-      .expect(200);
+    const refreshResponse = await agent.post('/api/v1/auth/refresh-token').expect(200);
 
     expect(refreshResponse.body.accessToken).toEqual(expect.any(String));
     expect(refreshResponse.body.accessToken).not.toBe(originalAccessToken);

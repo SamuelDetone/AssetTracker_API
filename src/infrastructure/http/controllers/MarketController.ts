@@ -4,15 +4,10 @@ import { SearchMarketAssetUseCase } from '../../../application/use-cases/SearchM
 import { AppError } from '../../../domain/errors/AppError.js';
 
 export class MarketController {
-  constructor(
-    private readonly searchMarketAssetUseCase: SearchMarketAssetUseCase,
-  ) {}
+  constructor(private readonly searchMarketAssetUseCase: SearchMarketAssetUseCase) {}
 
   search = async (request: Request, response: Response): Promise<Response> => {
-    const ticker =
-      typeof request.query.ticker === 'string'
-        ? request.query.ticker
-        : undefined;
+    const ticker = typeof request.query.ticker === 'string' ? request.query.ticker : undefined;
 
     if (!ticker) {
       throw new AppError('Ticker is required.', 400);

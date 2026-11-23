@@ -8,11 +8,7 @@ export function ensureAuthenticated(
   tokenProvider: ITokenProvider,
   tokenRepository: ITokenRepository,
 ) {
-  return async (
-    request: Request,
-    _response: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  return async (request: Request, _response: Response, next: NextFunction): Promise<void> => {
     const authorization = request.headers.authorization;
 
     if (!authorization) {

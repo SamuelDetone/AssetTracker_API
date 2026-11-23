@@ -27,9 +27,7 @@ describe('CreateInvestorUseCase', () => {
       role: 'USER',
     });
     expect(investor).not.toHaveProperty('password');
-    expect(investorRepository.investors[0].password).toBe(
-      'hashed:senha-segura',
-    );
+    expect(investorRepository.investors[0].password).toBe('hashed:senha-segura');
   });
 
   it('deve rejeitar um e-mail que ja pertence a outro investidor', async () => {
