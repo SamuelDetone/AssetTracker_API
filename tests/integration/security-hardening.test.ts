@@ -79,7 +79,10 @@ describe('blindagem HTTP da API', () => {
     };
 
     for (let attempt = 1; attempt <= 5; attempt += 1) {
-      await request(app).post('/api/v1/auth/login').send(credentials).expect(401);
+      await request(app)
+        .post('/api/v1/auth/login')
+        .send(credentials)
+        .expect(401);
     }
 
     const blockedResponse = await request(app)
